@@ -111,11 +111,11 @@ def find_iscc():
 
 def run_build(version):
     print("\n[RUNNING] Building...")
-    # Frontend
-    subprocess.run(["npm", "ci"], cwd=os.path.join(BASE_DIR, "frontend"), check=True)
-    subprocess.run(["npm", "run", "check"], cwd=os.path.join(BASE_DIR, "frontend"), check=True)
-    # Wails build
-    subprocess.run(["wails", "build", "-clean", "-platform", "windows/amd64"], cwd=BASE_DIR, check=True)
+    # Frontend (npm is a .cmd shim on Windows — use shell=True)
+    subprocess.run("npm ci", cwd=os.path.join(BASE_DIR, "frontend"), check=True, shell=True)
+    subprocess.run("npm run check", cwd=os.path.join(BASE_DIR, "frontend"), check=True, shell=True)
+    # Wails build (wails is a .cmd shim on Windows — use shell=True)
+    subprocess.run("wails build -clean -platform windows/amd64", cwd=BASE_DIR, check=True, shell=True)
     # Installer
     iscc = find_iscc()
     if iscc:

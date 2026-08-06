@@ -22,8 +22,8 @@ const (
 	GistURL = "https://gist.githubusercontent.com/alexxdavid/603ee193205abab222bee17188995f5a/raw/update_manifest.json"
 
 	// CurrentVersion is the app version baked into the binary at build time.
-	CurrentVersion = "1.0.0"
-	CurrentBuild   = 1
+	CurrentVersion = "1.1.0"
+	CurrentBuild   = 4
 )
 
 // Info is the update manifest parsed from the GitHub Gist.

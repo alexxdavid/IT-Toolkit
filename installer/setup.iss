@@ -2,7 +2,7 @@
 ; Compiled with Inno Setup 7 (ISCC)
 
 #ifndef MyAppVersion
-  #define MyAppVersion "1.0.0"
+  #define MyAppVersion "1.1.0"
 #endif
 
 #define MyAppName "Solutions IT Toolkit"

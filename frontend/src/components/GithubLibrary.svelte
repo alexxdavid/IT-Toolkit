@@ -5,7 +5,7 @@
   import type { InstallProgress } from '../lib/api'
   import { ui } from '../lib/store.svelte.ts'
   import { categoryColor } from '../lib/categories'
-  import { setSettingsOpen } from '../lib/store.svelte.ts'
+  import { setSettingsOpen, setLibraryOpen } from '../lib/store.svelte.ts'
   import SoftwareTab from './SoftwareTab.svelte'
 
   type Tab = 'recommended' | 'discovered' | 'software'
