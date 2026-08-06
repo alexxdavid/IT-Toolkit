@@ -26,12 +26,24 @@ export function CopyScript(arg1) {
   return window['go']['main']['App']['CopyScript'](arg1);
 }
 
+export function CopyToFavorites(arg1, arg2) {
+  return window['go']['main']['App']['CopyToFavorites'](arg1, arg2);
+}
+
 export function CreateCustomCategory(arg1) {
   return window['go']['main']['App']['CreateCustomCategory'](arg1);
 }
 
+export function CreateScriptLib(arg1, arg2) {
+  return window['go']['main']['App']['CreateScriptLib'](arg1, arg2);
+}
+
 export function DeleteCustomCategory(arg1) {
   return window['go']['main']['App']['DeleteCustomCategory'](arg1);
+}
+
+export function DeleteScriptLib(arg1) {
+  return window['go']['main']['App']['DeleteScriptLib'](arg1);
 }
 
 export function DiscoverRepos(arg1) {
@@ -54,6 +66,10 @@ export function GetCatalog() {
   return window['go']['main']['App']['GetCatalog']();
 }
 
+export function GetCurrentBuild() {
+  return window['go']['main']['App']['GetCurrentBuild']();
+}
+
 export function GetCurrentVersion() {
   return window['go']['main']['App']['GetCurrentVersion']();
 }
@@ -74,6 +90,10 @@ export function GetExeDir() {
   return window['go']['main']['App']['GetExeDir']();
 }
 
+export function GetFavoritesSummary() {
+  return window['go']['main']['App']['GetFavoritesSummary']();
+}
+
 export function GetRecommendedRepos() {
   return window['go']['main']['App']['GetRecommendedRepos']();
 }
@@ -82,12 +102,20 @@ export function GetRecommendedReposCombined() {
   return window['go']['main']['App']['GetRecommendedReposCombined']();
 }
 
+export function GetRepoContents(arg1) {
+  return window['go']['main']['App']['GetRepoContents'](arg1);
+}
+
 export function GetRepoDetail(arg1) {
   return window['go']['main']['App']['GetRepoDetail'](arg1);
 }
 
 export function GetScriptContent(arg1) {
   return window['go']['main']['App']['GetScriptContent'](arg1);
+}
+
+export function GetScriptLibContent(arg1) {
+  return window['go']['main']['App']['GetScriptLibContent'](arg1);
 }
 
 export function GetSoftwareCatalog() {
@@ -110,6 +138,14 @@ export function GitAvailable() {
   return window['go']['main']['App']['GitAvailable']();
 }
 
+export function HideItem(arg1, arg2) {
+  return window['go']['main']['App']['HideItem'](arg1, arg2);
+}
+
+export function ImportScriptToLib(arg1, arg2) {
+  return window['go']['main']['App']['ImportScriptToLib'](arg1, arg2);
+}
+
 export function InstallRepos(arg1, arg2) {
   return window['go']['main']['App']['InstallRepos'](arg1, arg2);
 }
@@ -118,12 +154,20 @@ export function InvalidateSoftwareVersions() {
   return window['go']['main']['App']['InvalidateSoftwareVersions']();
 }
 
+export function IsFavorite(arg1, arg2) {
+  return window['go']['main']['App']['IsFavorite'](arg1, arg2);
+}
+
 export function IsRepoInstalled(arg1, arg2) {
   return window['go']['main']['App']['IsRepoInstalled'](arg1, arg2);
 }
 
 export function IsWebView2Installed() {
   return window['go']['main']['App']['IsWebView2Installed']();
+}
+
+export function LibraryCategories() {
+  return window['go']['main']['App']['LibraryCategories']();
 }
 
 export function ListCustomCategories() {
@@ -138,12 +182,36 @@ export function ListCustomSoftware() {
   return window['go']['main']['App']['ListCustomSoftware']();
 }
 
+export function ListFavorites(arg1) {
+  return window['go']['main']['App']['ListFavorites'](arg1);
+}
+
+export function ListHidden(arg1) {
+  return window['go']['main']['App']['ListHidden'](arg1);
+}
+
+export function ListLocalRepos() {
+  return window['go']['main']['App']['ListLocalRepos']();
+}
+
+export function ListLocalSoftware() {
+  return window['go']['main']['App']['ListLocalSoftware']();
+}
+
 export function ListScripts(arg1, arg2) {
   return window['go']['main']['App']['ListScripts'](arg1, arg2);
 }
 
+export function ListScriptsLib() {
+  return window['go']['main']['App']['ListScriptsLib']();
+}
+
 export function Log(arg1) {
   return window['go']['main']['App']['Log'](arg1);
+}
+
+export function PickFile() {
+  return window['go']['main']['App']['PickFile']();
 }
 
 export function PickFolder() {
@@ -178,6 +246,10 @@ export function RescanAll() {
   return window['go']['main']['App']['RescanAll']();
 }
 
+export function RestoreItem(arg1, arg2) {
+  return window['go']['main']['App']['RestoreItem'](arg1, arg2);
+}
+
 export function RevealInExplorer(arg1) {
   return window['go']['main']['App']['RevealInExplorer'](arg1);
 }
@@ -186,6 +258,14 @@ export function RunScript(arg1) {
   return window['go']['main']['App']['RunScript'](arg1);
 }
 
+export function SaveScriptLib(arg1, arg2) {
+  return window['go']['main']['App']['SaveScriptLib'](arg1, arg2);
+}
+
 export function Search(arg1, arg2) {
   return window['go']['main']['App']['Search'](arg1, arg2);
+}
+
+export function ToggleFavorite(arg1, arg2) {
+  return window['go']['main']['App']['ToggleFavorite'](arg1, arg2);
 }

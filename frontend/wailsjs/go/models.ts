@@ -264,6 +264,24 @@ export namespace catalog {
 	    }
 	}
 	
+	export class ScriptRow {
+	    id: number;
+	    name: string;
+	    category: string;
+	    size: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new ScriptRow(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.name = source["name"];
+	        this.category = source["category"];
+	        this.size = source["size"];
+	    }
+	}
 	export class SearchResult {
 	    repos: Repo[];
 	    scripts: ScriptFile[];
@@ -369,6 +387,31 @@ export namespace githublib {
 	        this.download = source["download"];
 	        this.notes = source["notes"];
 	        this.wingetId = source["wingetId"];
+	    }
+	}
+
+}
+
+export namespace main {
+	
+	export class LocalItem {
+	    name: string;
+	    path: string;
+	    isDir: boolean;
+	    size: number;
+	    kind: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new LocalItem(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.name = source["name"];
+	        this.path = source["path"];
+	        this.isDir = source["isDir"];
+	        this.size = source["size"];
+	        this.kind = source["kind"];
 	    }
 	}
 

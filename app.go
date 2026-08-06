@@ -2,9 +2,11 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 
@@ -55,7 +57,38 @@ func (a *App) startup(ctx context.Context) {
 			"current": current, "total": total,
 		})
 	})
-	debugLog("startup: Solutions IT Toolkit done")
+
+	// First run: import the bundled script library seed (scripts_seed.json
+	// next to the EXE) so users can add/remove scripts in the database freely.
+	a.importScriptSeedIfEmpty()
+	debugLog("startup: done")
+}
+
+// importScriptSeedIfEmpty loads scripts_seed.json into the DB on first run.
+func (a *App) importScriptSeedIfEmpty() {
+	if a.store == nil {
+		return
+	}
+	n, err := a.store.LibraryScriptCount()
+	if err != nil || n > 0 {
+		return
+	}
+	seedPath := filepath.Join(platform.ExeDir(), "scripts_seed.json")
+	data, err := os.ReadFile(seedPath)
+	if err != nil {
+		debugLog("no seed file: " + err.Error())
+		return
+	}
+	var entries []catalog.LibrarySeedEntry
+	if err := json.Unmarshal(data, &entries); err != nil {
+		debugLog("seed parse error: " + err.Error())
+		return
+	}
+	if err := a.store.ImportLibrarySeed(entries); err != nil {
+		debugLog("seed import error: " + err.Error())
+		return
+	}
+	debugLog(fmt.Sprintf("imported %d scripts from seed", len(entries)))
 }
 
 // Ping is a trivial connectivity check.
@@ -207,6 +240,66 @@ func (a *App) RevealInExplorer(path string) error {
 // GetExeDir returns the directory containing the executable.
 func (a *App) GetExeDir() string { return platform.ExeDir() }
 
+// --- Script Library (database-backed) ---
+
+func (a *App) ListScriptsLib() ([]*catalog.ScriptRow, error) {
+	return a.store.ListLibraryScripts()
+}
+
+func (a *App) GetScriptLibContent(id int64) (string, error) {
+	return a.store.GetLibraryScript(id)
+}
+
+func (a *App) CreateScriptLib(name, category string) (int64, error) {
+	if name == "" {
+		return 0, fmt.Errorf("script name is required")
+	}
+	if category == "" {
+		category = "Uncategorized"
+	}
+	if !strings.HasSuffix(strings.ToLower(name), ".ps1") {
+		name = name + ".ps1"
+	}
+	content := "# Script: " + name + "\n\n"
+	return a.store.CreateLibraryScript(name, category, content)
+}
+
+func (a *App) SaveScriptLib(id int64, content string) error {
+	return a.store.SaveLibraryScript(id, content)
+}
+
+func (a *App) DeleteScriptLib(id int64) error {
+	return a.store.DeleteLibraryScript(id)
+}
+
+func (a *App) LibraryCategories() ([]string, error) {
+	return a.store.LibraryCategories()
+}
+
+// ImportScriptToLib imports a file's contents into the script library.
+func (a *App) ImportScriptToLib(sourcePath, category string) (int64, error) {
+	data, err := os.ReadFile(sourcePath)
+	if err != nil {
+		return 0, err
+	}
+	if category == "" {
+		category = "Imported"
+	}
+	name := filepath.Base(sourcePath)
+	return a.store.CreateLibraryScript(name, category, string(data))
+}
+
+// PickFile opens a native file picker dialog.
+func (a *App) PickFile() (string, error) {
+	return runtime.OpenFileDialog(a.ctx, runtime.OpenDialogOptions{
+		Title: "Select a script file",
+		Filters: []runtime.FileFilter{
+			{DisplayName: "Scripts (*.ps1 *.bat *.cmd *.py *.sh *.vbs)", Pattern: "*.ps1;*.bat;*.cmd;*.py;*.sh;*.vbs"},
+			{DisplayName: "All Files", Pattern: "*"},
+		},
+	})
+}
+
 // GetDefaultScriptsDir returns the default Scripts folder path.
 func (a *App) GetDefaultScriptsDir() string { return platform.DefaultScriptsDir() }
 
@@ -257,8 +350,11 @@ func (a *App) ApplyUpdate(installerPath string) error {
 	return update.Install(installerPath)
 }
 
-// GetCurrentVersion returns the version baked into this binary.
+// GetCurrentVersion returns the version string for this binary.
 func (a *App) GetCurrentVersion() string { return update.CurrentVersion }
+
+// GetCurrentBuild returns the build number for this binary.
+func (a *App) GetCurrentBuild() int { return update.CurrentBuild }
 
 // --- Custom Categories ---
 
@@ -367,6 +463,84 @@ func (a *App) AddCustomSoftware(name, version, category, download, notes, winget
 
 func (a *App) RemoveCustomSoftware(id int64) error {
 	return a.store.RemoveCustomSoftware(id)
+}
+
+// --- Favorites ---
+
+func (a *App) ListFavorites(kind string) ([]string, error) {
+	return a.store.ListFavorites(kind)
+}
+
+func (a *App) IsFavorite(kind, name string) (bool, error) {
+	return a.store.IsFavorite(kind, name)
+}
+
+func (a *App) ToggleFavorite(kind, name string) (bool, error) {
+	return a.store.ToggleFavorite(kind, name)
+}
+
+// --- Hidden Items (per-user personalization) ---
+
+func (a *App) HideItem(kind, name string) error {
+	return a.store.HideItem(kind, name)
+}
+
+func (a *App) RestoreItem(kind, name string) error {
+	return a.store.RestoreItem(kind, name)
+}
+
+func (a *App) ListHidden(kind string) ([]string, error) {
+	return a.store.ListHidden(kind)
+}
+
+// CopyToFavorites copies a file or folder to the favorites destination (e.g. USB).
+func (a *App) CopyToFavorites(sourcePath string, dest string) (string, error) {
+	name := filepath.Base(sourcePath)
+	target := filepath.Join(dest, name)
+	if err := os.MkdirAll(dest, 0o755); err != nil {
+		return "", err
+	}
+	if info, err := os.Stat(sourcePath); err == nil && info.IsDir() {
+		return target, copyDir(sourcePath, target)
+	}
+	data, err := os.ReadFile(sourcePath)
+	if err != nil {
+		return "", err
+	}
+	return target, os.WriteFile(target, data, 0o644)
+}
+
+func copyDir(src, dst string) error {
+	return filepath.Walk(src, func(p string, info os.FileInfo, err error) error {
+		if err != nil || info.IsDir() {
+			return err
+		}
+		rel, err := filepath.Rel(src, p)
+		if err != nil {
+			return nil
+		}
+		if err := os.MkdirAll(filepath.Join(dst, filepath.Dir(rel)), 0o755); err != nil {
+			return err
+		}
+		data, err := os.ReadFile(p)
+		if err != nil {
+			return nil
+		}
+		return os.WriteFile(filepath.Join(dst, rel), data, 0o644)
+	})
+}
+
+// GetFavoritesSummary returns the count of favorited items by kind.
+func (a *App) GetFavoritesSummary() (map[string]int, error) {
+	result := map[string]int{"repo": 0, "software": 0, "script": 0}
+	for kind := range result {
+		favs, err := a.store.ListFavorites(kind)
+		if err != nil {
+			return nil, err
+		}
+		result[kind] = len(favs)
+	}
+	return result, nil
 }
 
 // InstallRepos installs repos by name (URLs resolved server-side).

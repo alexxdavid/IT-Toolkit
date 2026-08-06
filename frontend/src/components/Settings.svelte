@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { api, pickFolder } from '../lib/api'
+  import { onMount } from 'svelte'
+  import { api } from '../lib/api'
   import { categoryColor } from '../lib/categories'
   import { CheckCircle2, Plus, Trash2, Pencil, RefreshCw, Download, Loader2, X } from 'lucide-svelte'
-  import { onMount } from 'svelte'
-  import { setSettingsOpen } from '../lib/store.svelte.ts'
+  import { setSettingsOpen, ui } from '../lib/store.svelte.ts'
   import { ArrowLeft } from 'lucide-svelte'
 
   let customCategories = $state<any[]>([])
@@ -20,11 +20,13 @@
   let newSwWinget = $state('')
   let newSwNotes = $state('')
   let customSoftware = $state<any[]>([])
+  let scriptsPath = $state('')
   let editingCat = $state<number | null>(null)
   let editCatName = $state('')
   let err = $state<string | null>(null)
   let success = $state<string | null>(null)
   let version = $state('1.0.0')
+  let build = $state(1)
   let updateInfo = $state<any>(null)
   let checking = $state(false)
   let downloading = $state(false)
@@ -41,6 +43,8 @@
   onMount(async () => {
     await refresh()
     try { version = await api.getCurrentVersion() } catch {}
+    try { build = await api.getCurrentBuild() } catch {}
+    try { } catch {}
   })
 
   let allCategories = $derived.by((): string[] => {
@@ -162,13 +166,7 @@
 </script>
 
 <div class="flex min-h-0 flex-1 flex-col overflow-y-auto p-6">
-  <div class="flex items-center gap-3 mb-6">
-    <button class="flex items-center gap-1.5 rounded-lg border border-white/10 bg-slate-800/60 px-3 py-1.5 text-xs text-slate-300 hover:text-white transition"
-      onclick={() => setSettingsOpen(false)}>
-      <ArrowLeft size="14" /> Back
-    </button>
-    <h2 class="text-lg font-bold text-white">Settings</h2>
-  </div>
+  <h2 class="mb-6 text-lg font-bold text-white">Settings</h2>
 
   {#if success}
     <div class="mb-4 flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-300"><CheckCircle2 size="14" /> {success}</div>
@@ -181,7 +179,7 @@
   <section class="mb-6 rounded-2xl border border-white/10 bg-gradient-to-br from-slate-800/80 to-slate-900/80 p-5 shadow-xl">
     <h3 class="mb-3 text-sm font-bold text-white">App Updates</h3>
     <div class="flex items-center gap-4">
-      <span class="text-xs text-slate-400">Current version: <span class="font-mono text-white">v{version}</span></span>
+      <span class="text-xs text-slate-400">Current version: <span class="font-mono text-white">v{version}</span> <span class="font-mono text-slate-500">(build {build})</span></span>
       {#if checking}
         <span class="text-xs text-slate-400"><Loader2 size="12" class="inline animate-spin" /> Checking…</span>
       {:else if updateInfo?.available}
@@ -299,4 +297,5 @@
       </div>
     {/if}
   </section>
+
 </div>

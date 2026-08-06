@@ -116,6 +116,8 @@ def run_build(version):
     subprocess.run("npm run check", cwd=os.path.join(BASE_DIR, "frontend"), check=True, shell=True)
     # Wails build (wails is a .cmd shim on Windows — use shell=True)
     subprocess.run("wails build -clean -platform windows/amd64", cwd=BASE_DIR, check=True, shell=True)
+    # Script library seed (bundled into the installer, imported into the DB on first run)
+    subprocess.run("go run ./cmd/genseed", cwd=BASE_DIR, check=True, shell=True)
     # Installer
     iscc = find_iscc()
     if iscc:

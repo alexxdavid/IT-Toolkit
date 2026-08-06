@@ -2,7 +2,7 @@
 ; Compiled with Inno Setup 7 (ISCC)
 
 #ifndef MyAppVersion
-  #define MyAppVersion "1.1.0"
+  #define MyAppVersion "236.12"
 #endif
 
 #define MyAppName "Solutions IT Toolkit"
@@ -41,9 +41,10 @@ Name: "{app}\Software"
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
-; Only the application EXE. The Scripts folder is distributed separately and
-; kept next to the EXE by the user.
+; The application EXE plus the script library seed (imported into the DB on
+; first launch so users can add/remove scripts freely).
 Source: "..\build\bin\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\build\scripts_seed.json"; DestDir: "{app}"; Flags: ignoreversion
 
 [Run]
 ; Nothing to launch after install by design — pure extraction.

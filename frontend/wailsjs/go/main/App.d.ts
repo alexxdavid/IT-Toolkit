@@ -3,6 +3,7 @@
 import {catalog} from '../models';
 import {update} from '../models';
 import {githublib} from '../models';
+import {main} from '../models';
 
 export function AddCustomRepo(arg1:string,arg2:string,arg3:string,arg4:string):Promise<catalog.CustomRepo>;
 
@@ -16,9 +17,15 @@ export function CheckForUpdate(arg1:boolean):Promise<update.Info>;
 
 export function CopyScript(arg1:string):Promise<string>;
 
+export function CopyToFavorites(arg1:string,arg2:string):Promise<string>;
+
 export function CreateCustomCategory(arg1:string):Promise<catalog.CustomCategory>;
 
+export function CreateScriptLib(arg1:string,arg2:string):Promise<number>;
+
 export function DeleteCustomCategory(arg1:number):Promise<void>;
+
+export function DeleteScriptLib(arg1:number):Promise<void>;
 
 export function DiscoverRepos(arg1:string):Promise<Array<githublib.RepoInfo>>;
 
@@ -30,6 +37,8 @@ export function ExportScripts(arg1:Array<string>,arg2:string):Promise<catalog.Ex
 
 export function GetCatalog():Promise<catalog.CatalogView>;
 
+export function GetCurrentBuild():Promise<number>;
+
 export function GetCurrentVersion():Promise<string>;
 
 export function GetDefaultInstallDir():Promise<string>;
@@ -40,13 +49,19 @@ export function GetDefaultSoftwareDir():Promise<string>;
 
 export function GetExeDir():Promise<string>;
 
+export function GetFavoritesSummary():Promise<Record<string, number>>;
+
 export function GetRecommendedRepos():Promise<Array<githublib.RecommendedRepo>>;
 
 export function GetRecommendedReposCombined():Promise<Array<githublib.RecommendedRepo>>;
 
+export function GetRepoContents(arg1:string):Promise<Array<main.LocalItem>>;
+
 export function GetRepoDetail(arg1:number):Promise<catalog.RepoDetail>;
 
 export function GetScriptContent(arg1:string):Promise<string>;
+
+export function GetScriptLibContent(arg1:number):Promise<string>;
 
 export function GetSoftwareCatalog():Promise<Array<githublib.SoftwareItem>>;
 
@@ -58,13 +73,21 @@ export function GetUpdateProgress():Promise<Record<string, any>>;
 
 export function GitAvailable():Promise<boolean>;
 
+export function HideItem(arg1:string,arg2:string):Promise<void>;
+
+export function ImportScriptToLib(arg1:string,arg2:string):Promise<number>;
+
 export function InstallRepos(arg1:Array<string>,arg2:string):Promise<Array<githublib.InstallResult>>;
 
 export function InvalidateSoftwareVersions():Promise<void>;
 
+export function IsFavorite(arg1:string,arg2:string):Promise<boolean>;
+
 export function IsRepoInstalled(arg1:string,arg2:string):Promise<boolean>;
 
 export function IsWebView2Installed():Promise<boolean>;
+
+export function LibraryCategories():Promise<Array<string>>;
 
 export function ListCustomCategories():Promise<Array<catalog.CustomCategory>>;
 
@@ -72,9 +95,21 @@ export function ListCustomRepos():Promise<Array<catalog.CustomRepo>>;
 
 export function ListCustomSoftware():Promise<Array<catalog.CustomSoftware>>;
 
+export function ListFavorites(arg1:string):Promise<Array<string>>;
+
+export function ListHidden(arg1:string):Promise<Array<string>>;
+
+export function ListLocalRepos():Promise<Array<main.LocalItem>>;
+
+export function ListLocalSoftware():Promise<Array<main.LocalItem>>;
+
 export function ListScripts(arg1:string,arg2:string):Promise<Array<catalog.ScriptFile>>;
 
+export function ListScriptsLib():Promise<Array<catalog.ScriptRow>>;
+
 export function Log(arg1:string):Promise<void>;
+
+export function PickFile():Promise<string>;
 
 export function PickFolder():Promise<string>;
 
@@ -92,8 +127,14 @@ export function RenameCustomCategory(arg1:number,arg2:string):Promise<void>;
 
 export function RescanAll():Promise<string>;
 
+export function RestoreItem(arg1:string,arg2:string):Promise<void>;
+
 export function RevealInExplorer(arg1:string):Promise<void>;
 
 export function RunScript(arg1:string):Promise<catalog.RunResult>;
 
+export function SaveScriptLib(arg1:number,arg2:string):Promise<void>;
+
 export function Search(arg1:string,arg2:boolean):Promise<catalog.SearchResult>;
+
+export function ToggleFavorite(arg1:string,arg2:string):Promise<boolean>;

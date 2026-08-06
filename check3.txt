@@ -1,0 +1,332 @@
+﻿
+> ittoolkit-frontend@1.0.0 check
+> svelte-check --tsconfig ./tsconfig.json
+
+Loading svelte-check in workspace: c:\Gemini\Toolkit\frontend
+Getting Svelte diagnostics...
+
+c:\Gemini\Toolkit\frontend\[32msrc\components\ScriptEditor.svelte[39m:63:5
+[33mWarn[39m: Visible, non-interactive element `<div>` with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+[36m    onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') open = false }}>
+    [35m<div class="flex h-[85vh] w-[min(900px,92vw)] flex-col overflow-hidden rounded-xl border border-slate-700 bg-slate-900 shadow-2xl"
+      onclick={(e) => e.stopPropagation()}>
+      <div class="flex items-center gap-3 border-b border-slate-800 px-5 py-3">
+        <FileCode size="18" class="text-violet-400" />
+        <span class="font-mono text-sm text-white">{fileName}</span>
+        {#if edited}
+          <span class="rounded bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-300">Modified</span>
+        {/if}
+        {#if saved}
+          <span class="rounded bg-emerald-500/15 px-2 py-0.5 text-xs font-medium text-emerald-300">Saved</span>
+        {/if}
+        <div class="flex-1"></div>
+        <button class="flex items-center gap-1.5 rounded-lg border border-white/10 bg-slate-800/60 px-3 py-1.5 text-sm text-slate-300 hover:text-white transition"
+          onclick={copyToClipboard}>
+          <Copy size="14" /> Copy
+        </button>
+        <button class="flex items-center gap-1.5 rounded-lg bg-emerald-500/15 px-3 py-1.5 text-sm font-medium text-emerald-300 ring-1 ring-emerald-500/40 transition hover:bg-emerald-500/25 disabled:opacity-50"
+          onclick={save} disabled={saving || !edited}>
+          <Save size="14" /> Save
+        </button>
+        <button class="rounded p-1.5 text-slate-400 hover:text-white" onclick={() => open = false}>
+          <X size="16" />
+        </button>
+      </div>
+      <div class="flex-1 overflow-auto">
+        {#if loading}
+          <div class="flex items-center justify-center py-16 text-slate-500">Loading…</div>
+        {:else}
+          <textarea
+            bind:value={content}
+            class="w-full h-full min-h-[50vh] resize-none bg-transparent p-5 font-mono text-sm leading-relaxed text-slate-200 outline-none"
+            spellcheck="false"
+            placeholder="Start typing your script…"
+          ></textarea>
+        {/if}
+      </div>
+      <div class="flex items-center justify-between border-t border-slate-800 px-5 py-2 text-xs text-slate-500">
+        <span>Stored in library database</span>
+        <span>{content.split('\n').length} lines · {content.length} chars</span>
+      </div>
+    </div>[36m
+  </div>[39m
+
+c:\Gemini\Toolkit\frontend\[32msrc\components\ScriptEditor.svelte[39m:63:5
+[33mWarn[39m: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+[36m    onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') open = false }}>
+    [35m<div class="flex h-[85vh] w-[min(900px,92vw)] flex-col overflow-hidden rounded-xl border border-slate-700 bg-slate-900 shadow-2xl"
+      onclick={(e) => e.stopPropagation()}>
+      <div class="flex items-center gap-3 border-b border-slate-800 px-5 py-3">
+        <FileCode size="18" class="text-violet-400" />
+        <span class="font-mono text-sm text-white">{fileName}</span>
+        {#if edited}
+          <span class="rounded bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-300">Modified</span>
+        {/if}
+        {#if saved}
+          <span class="rounded bg-emerald-500/15 px-2 py-0.5 text-xs font-medium text-emerald-300">Saved</span>
+        {/if}
+        <div class="flex-1"></div>
+        <button class="flex items-center gap-1.5 rounded-lg border border-white/10 bg-slate-800/60 px-3 py-1.5 text-sm text-slate-300 hover:text-white transition"
+          onclick={copyToClipboard}>
+          <Copy size="14" /> Copy
+        </button>
+        <button class="flex items-center gap-1.5 rounded-lg bg-emerald-500/15 px-3 py-1.5 text-sm font-medium text-emerald-300 ring-1 ring-emerald-500/40 transition hover:bg-emerald-500/25 disabled:opacity-50"
+          onclick={save} disabled={saving || !edited}>
+          <Save size="14" /> Save
+        </button>
+        <button class="rounded p-1.5 text-slate-400 hover:text-white" onclick={() => open = false}>
+          <X size="16" />
+        </button>
+      </div>
+      <div class="flex-1 overflow-auto">
+        {#if loading}
+          <div class="flex items-center justify-center py-16 text-slate-500">Loading…</div>
+        {:else}
+          <textarea
+            bind:value={content}
+            class="w-full h-full min-h-[50vh] resize-none bg-transparent p-5 font-mono text-sm leading-relaxed text-slate-200 outline-none"
+            spellcheck="false"
+            placeholder="Start typing your script…"
+          ></textarea>
+        {/if}
+      </div>
+      <div class="flex items-center justify-between border-t border-slate-800 px-5 py-2 text-xs text-slate-500">
+        <span>Stored in library database</span>
+        <span>{content.split('\n').length} lines · {content.length} chars</span>
+      </div>
+    </div>[36m
+  </div>[39m
+
+c:\Gemini\Toolkit\frontend\[32msrc\components\ScriptsTab.svelte[39m:219:11
+[33mWarn[39m: Visible, non-interactive element `<div>` with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+[36m            {#each filtered as sc (sc.id)}
+          [35m<div class="group grid grid-cols-[1fr_120px_80px_100px] gap-2 items-center px-4 py-2.5 border-b border-slate-800/30 hover:bg-white/5 transition cursor-pointer"
+            onclick={() => editScript(sc)}>
+            <div class="flex items-center gap-2 min-w-0">
+              <FileCode size="14" class="shrink-0 text-violet-400" />
+              <span class="truncate font-mono text-sm font-medium text-white hover:text-violet-300 transition">{sc.name}</span>
+            </div>
+            <span class="shrink-0 rounded-lg border border-white/10 bg-slate-950/60 px-2 py-0.5 text-[10px] font-semibold {categoryColor(sc.category)}">{sc.category}</span>
+            <span class="shrink-0 rounded border px-2 py-0.5 text-[10px] font-semibold {langBadge(langOf(sc.name))}">{langOf(sc.name)}</span>
+            <div class="flex items-center justify-end gap-1">
+              <span class="text-[10px] text-slate-500 w-14 text-right">{formatSize(sc.size)}</span>
+              <div class="flex gap-0.5 opacity-0 group-hover:opacity-100 ml-2">
+                <button class="rounded p-1 {scriptFavorites[sc.name] ? 'text-amber-400' : 'text-slate-400 hover:text-amber-400'}"
+                  title={scriptFavorites[sc.name] ? 'Remove from favorites' : 'Add to favorites'}
+                  onclick={(e: Event) => { e.stopPropagation(); toggleScriptFavorite(sc.name) }}>
+                  <Star size="13" class={scriptFavorites[sc.name] ? 'fill-current' : ''} />
+                </button>
+                <button class="rounded p-1 text-slate-400 hover:bg-violet-500/20 hover:text-violet-300" title="Edit"
+                  onclick={(e) => { e.stopPropagation(); editScript(sc) }}><Eye size="13" /></button>
+                <button class="rounded p-1 text-slate-400 hover:bg-slate-700 hover:text-slate-100" title="Copy"
+                  onclick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(sc.name) }}><Copy size="13" /></button>
+                <button class="rounded p-1 text-slate-400 hover:bg-rose-500/20 hover:text-rose-400" title="Delete"
+                  onclick={(e) => { e.stopPropagation(); deleteScript(sc) }}><Trash2 size="13" /></button>
+              </div>
+            </div>
+          </div>[36m
+        {/each}[39m
+
+c:\Gemini\Toolkit\frontend\[32msrc\components\ScriptsTab.svelte[39m:219:11
+[33mWarn[39m: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+[36m            {#each filtered as sc (sc.id)}
+          [35m<div class="group grid grid-cols-[1fr_120px_80px_100px] gap-2 items-center px-4 py-2.5 border-b border-slate-800/30 hover:bg-white/5 transition cursor-pointer"
+            onclick={() => editScript(sc)}>
+            <div class="flex items-center gap-2 min-w-0">
+              <FileCode size="14" class="shrink-0 text-violet-400" />
+              <span class="truncate font-mono text-sm font-medium text-white hover:text-violet-300 transition">{sc.name}</span>
+            </div>
+            <span class="shrink-0 rounded-lg border border-white/10 bg-slate-950/60 px-2 py-0.5 text-[10px] font-semibold {categoryColor(sc.category)}">{sc.category}</span>
+            <span class="shrink-0 rounded border px-2 py-0.5 text-[10px] font-semibold {langBadge(langOf(sc.name))}">{langOf(sc.name)}</span>
+            <div class="flex items-center justify-end gap-1">
+              <span class="text-[10px] text-slate-500 w-14 text-right">{formatSize(sc.size)}</span>
+              <div class="flex gap-0.5 opacity-0 group-hover:opacity-100 ml-2">
+                <button class="rounded p-1 {scriptFavorites[sc.name] ? 'text-amber-400' : 'text-slate-400 hover:text-amber-400'}"
+                  title={scriptFavorites[sc.name] ? 'Remove from favorites' : 'Add to favorites'}
+                  onclick={(e: Event) => { e.stopPropagation(); toggleScriptFavorite(sc.name) }}>
+                  <Star size="13" class={scriptFavorites[sc.name] ? 'fill-current' : ''} />
+                </button>
+                <button class="rounded p-1 text-slate-400 hover:bg-violet-500/20 hover:text-violet-300" title="Edit"
+                  onclick={(e) => { e.stopPropagation(); editScript(sc) }}><Eye size="13" /></button>
+                <button class="rounded p-1 text-slate-400 hover:bg-slate-700 hover:text-slate-100" title="Copy"
+                  onclick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(sc.name) }}><Copy size="13" /></button>
+                <button class="rounded p-1 text-slate-400 hover:bg-rose-500/20 hover:text-rose-400" title="Delete"
+                  onclick={(e) => { e.stopPropagation(); deleteScript(sc) }}><Trash2 size="13" /></button>
+              </div>
+            </div>
+          </div>[36m
+        {/each}[39m
+
+c:\Gemini\Toolkit\frontend\[32msrc\components\ScriptsTab.svelte[39m:256:5
+[33mWarn[39m: Visible, non-interactive element `<div>` with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+[36m    onkeydown={(e) => { if (e.key === 'Escape') showNewScript = false }}>
+    [35m<div class="w-[min(500px,92vw)] rounded-xl border border-slate-700 bg-slate-900 p-5 shadow-2xl space-y-4"
+      onclick={(e) => e.stopPropagation()}>
+      <div class="flex items-center justify-between">
+        <h3 class="text-sm font-bold text-white">New Script</h3>
+        <button class="rounded p-1 text-slate-400 hover:text-white" onclick={() => showNewScript = false}><X size="14" /></button>
+      </div>
+      <input bind:value={newScriptName} placeholder="script-name.ps1"
+        class="w-full rounded-lg border border-white/10 bg-slate-800/60 py-2 px-3 text-sm text-slate-200 placeholder:text-slate-500 focus:border-violet-500/50 focus:outline-none"
+        onkeydown={(e) => { if (e.key === 'Enter') createNewScript() }} />
+      <select bind:value={newScriptCategory}
+        class="w-full rounded-lg border border-white/10 bg-slate-800/60 py-2 px-3 text-sm text-slate-200 focus:border-violet-500/50 focus:outline-none">
+        <option value="">Category…</option>
+        {#each categories as cat (cat)}
+          <option value={cat}>{cat}</option>
+        {/each}
+      </select>
+      {#if err}<p class="text-sm text-rose-400">{err}</p>{/if}
+      <button class="w-full flex items-center justify-center gap-2 rounded-lg bg-violet-500/15 px-4 py-2.5 text-sm font-bold text-violet-300 ring-1 ring-violet-500/40 transition hover:bg-violet-500/25"
+        onclick={createNewScript}>
+        <Plus size="14" /> Create
+      </button>
+    </div>[36m
+  </div>[39m
+
+c:\Gemini\Toolkit\frontend\[32msrc\components\ScriptsTab.svelte[39m:256:5
+[33mWarn[39m: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+[36m    onkeydown={(e) => { if (e.key === 'Escape') showNewScript = false }}>
+    [35m<div class="w-[min(500px,92vw)] rounded-xl border border-slate-700 bg-slate-900 p-5 shadow-2xl space-y-4"
+      onclick={(e) => e.stopPropagation()}>
+      <div class="flex items-center justify-between">
+        <h3 class="text-sm font-bold text-white">New Script</h3>
+        <button class="rounded p-1 text-slate-400 hover:text-white" onclick={() => showNewScript = false}><X size="14" /></button>
+      </div>
+      <input bind:value={newScriptName} placeholder="script-name.ps1"
+        class="w-full rounded-lg border border-white/10 bg-slate-800/60 py-2 px-3 text-sm text-slate-200 placeholder:text-slate-500 focus:border-violet-500/50 focus:outline-none"
+        onkeydown={(e) => { if (e.key === 'Enter') createNewScript() }} />
+      <select bind:value={newScriptCategory}
+        class="w-full rounded-lg border border-white/10 bg-slate-800/60 py-2 px-3 text-sm text-slate-200 focus:border-violet-500/50 focus:outline-none">
+        <option value="">Category…</option>
+        {#each categories as cat (cat)}
+          <option value={cat}>{cat}</option>
+        {/each}
+      </select>
+      {#if err}<p class="text-sm text-rose-400">{err}</p>{/if}
+      <button class="w-full flex items-center justify-center gap-2 rounded-lg bg-violet-500/15 px-4 py-2.5 text-sm font-bold text-violet-300 ring-1 ring-violet-500/40 transition hover:bg-violet-500/25"
+        onclick={createNewScript}>
+        <Plus size="14" /> Create
+      </button>
+    </div>[36m
+  </div>[39m
+
+c:\Gemini\Toolkit\frontend\[32msrc\components\ScriptsTab.svelte[39m:287:5
+[33mWarn[39m: Visible, non-interactive element `<div>` with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+[36m    onkeydown={(e) => { if (e.key === 'Escape') showImportDialog = false }}>
+    [35m<div class="w-[min(400px,92vw)] rounded-xl border border-slate-700 bg-slate-900 p-5 shadow-2xl space-y-4"
+      onclick={(e) => e.stopPropagation()}>
+      <div class="flex items-center justify-between">
+        <h3 class="text-sm font-bold text-white">Import Script</h3>
+        <button class="rounded p-1 text-slate-400 hover:text-white" onclick={() => showImportDialog = false}><X size="14" /></button>
+      </div>
+      <p class="text-sm text-slate-400">Which category should this script go into?</p>
+      <select bind:value={importCategory}
+        class="w-full rounded-lg border border-white/10 bg-slate-800/60 py-2 px-3 text-sm text-slate-200 focus:border-violet-500/50 focus:outline-none">
+        <option value="">Uncategorized</option>
+        {#each categories as cat (cat)}
+          <option value={cat}>{cat}</option>
+        {/each}
+        <option value="New category…">New category…</option>
+      </select>
+      {#if importCategory === 'New category…'}
+        <input bind:value={importCategory} placeholder="Category name"
+          class="w-full rounded-lg border border-white/10 bg-slate-800/60 py-2 px-3 text-sm text-slate-200 placeholder:text-slate-500 focus:border-violet-500/50 focus:outline-none" />
+      {/if}
+      <div class="flex gap-2">
+        <button class="flex-1 flex items-center justify-center gap-2 rounded-lg bg-violet-500/15 px-4 py-2.5 text-sm font-bold text-violet-300 ring-1 ring-violet-500/40 transition hover:bg-violet-500/25"
+          onclick={doImport}>
+          <Upload size="14" /> Import
+        </button>
+        <button class="rounded-lg border border-white/10 px-4 py-2.5 text-sm text-slate-400 hover:text-white transition"
+          onclick={() => showImportDialog = false}>Cancel</button>
+      </div>
+    </div>[36m
+  </div>[39m
+
+c:\Gemini\Toolkit\frontend\[32msrc\components\ScriptsTab.svelte[39m:287:5
+[33mWarn[39m: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+[36m    onkeydown={(e) => { if (e.key === 'Escape') showImportDialog = false }}>
+    [35m<div class="w-[min(400px,92vw)] rounded-xl border border-slate-700 bg-slate-900 p-5 shadow-2xl space-y-4"
+      onclick={(e) => e.stopPropagation()}>
+      <div class="flex items-center justify-between">
+        <h3 class="text-sm font-bold text-white">Import Script</h3>
+        <button class="rounded p-1 text-slate-400 hover:text-white" onclick={() => showImportDialog = false}><X size="14" /></button>
+      </div>
+      <p class="text-sm text-slate-400">Which category should this script go into?</p>
+      <select bind:value={importCategory}
+        class="w-full rounded-lg border border-white/10 bg-slate-800/60 py-2 px-3 text-sm text-slate-200 focus:border-violet-500/50 focus:outline-none">
+        <option value="">Uncategorized</option>
+        {#each categories as cat (cat)}
+          <option value={cat}>{cat}</option>
+        {/each}
+        <option value="New category…">New category…</option>
+      </select>
+      {#if importCategory === 'New category…'}
+        <input bind:value={importCategory} placeholder="Category name"
+          class="w-full rounded-lg border border-white/10 bg-slate-800/60 py-2 px-3 text-sm text-slate-200 placeholder:text-slate-500 focus:border-violet-500/50 focus:outline-none" />
+      {/if}
+      <div class="flex gap-2">
+        <button class="flex-1 flex items-center justify-center gap-2 rounded-lg bg-violet-500/15 px-4 py-2.5 text-sm font-bold text-violet-300 ring-1 ring-violet-500/40 transition hover:bg-violet-500/25"
+          onclick={doImport}>
+          <Upload size="14" /> Import
+        </button>
+        <button class="rounded-lg border border-white/10 px-4 py-2.5 text-sm text-slate-400 hover:text-white transition"
+          onclick={() => showImportDialog = false}>Cancel</button>
+      </div>
+    </div>[36m
+  </div>[39m
+
+c:\Gemini\Toolkit\frontend\[32msrc\components\LocalTab.svelte[39m:93:15
+[33mWarn[39m: Visible, non-interactive element `<div>` with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+[36m            <div class="rounded-xl border border-white/5 bg-slate-800/50 overflow-hidden transition hover:border-white/10">
+              [35m<div class="flex items-center gap-3 px-4 py-3 cursor-pointer transition hover:bg-white/5"
+                onclick={() => expandRepo(repo)}>
+                {#if expandedRepo === repo.name}
+                  <ChevronDown size="16" class="shrink-0 text-slate-400" />
+                {:else}
+                  <ChevronRight size="16" class="shrink-0 text-slate-400" />
+                {/if}
+                <Folder size="14" class="shrink-0 text-amber-400" />
+                <span class="font-mono text-xs font-semibold text-white">{repo.name}</span>
+                <div class="flex-1"></div>
+                <button class="shrink-0 rounded-md border border-white/10 px-2 py-1 text-[10px] text-slate-400 hover:text-white transition"
+                  onclick={(e: MouseEvent) => { e.stopPropagation(); api.reveal(repo.path) }}>
+                  <ExternalLink size="10" /> Open
+                </button>
+              </div>[36m
+              {#if expandedRepo === repo.name}[39m
+
+c:\Gemini\Toolkit\frontend\[32msrc\components\LocalTab.svelte[39m:93:15
+[33mWarn[39m: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+[36m            <div class="rounded-xl border border-white/5 bg-slate-800/50 overflow-hidden transition hover:border-white/10">
+              [35m<div class="flex items-center gap-3 px-4 py-3 cursor-pointer transition hover:bg-white/5"
+                onclick={() => expandRepo(repo)}>
+                {#if expandedRepo === repo.name}
+                  <ChevronDown size="16" class="shrink-0 text-slate-400" />
+                {:else}
+                  <ChevronRight size="16" class="shrink-0 text-slate-400" />
+                {/if}
+                <Folder size="14" class="shrink-0 text-amber-400" />
+                <span class="font-mono text-xs font-semibold text-white">{repo.name}</span>
+                <div class="flex-1"></div>
+                <button class="shrink-0 rounded-md border border-white/10 px-2 py-1 text-[10px] text-slate-400 hover:text-white transition"
+                  onclick={(e: MouseEvent) => { e.stopPropagation(); api.reveal(repo.path) }}>
+                  <ExternalLink size="10" /> Open
+                </button>
+              </div>[36m
+              {#if expandedRepo === repo.name}[39m
+
+====================================
+[33msvelte-check found 0 errors and 10 warnings in 3 files
+[39m

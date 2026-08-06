@@ -36,16 +36,19 @@ var (
 // resolve through redirects; the downloader captures the final filename.
 var SoftwareCatalog = []*SoftwareItem{
 	// Browsers
-	{Name: "Google Chrome", Version: "", Category: "Browsers", Download: "https://dl.google.com/chrome/install/latest/chrome_installer.exe", Notes: "", WingetID: "Google.Chrome"},
+	{Name: "Google Chrome", Version: "", Category: "Browsers", Download: "https://dl.google.com/chrome/direct/googlechromestandaloneenterprise64_x64.msi", Notes: "64-bit enterprise installer", WingetID: "Google.Chrome"},
 	{Name: "Mozilla Firefox", Version: "", Category: "Browsers", Download: "https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US", Notes: "", WingetID: "Mozilla.Firefox"},
 	{Name: "Microsoft Edge", Version: "", Category: "Browsers", Download: "https://www.microsoft.com/en-us/edge/download", Notes: "", WingetID: "Microsoft.Edge"},
 	{Name: "Brave Browser", Version: "", Category: "Browsers", Download: "https://laptop-updates.brave.com/latest/standalone", Notes: "", WingetID: "Brave.Brave"},
 
 	// Productivity
 	{Name: "Microsoft Teams", Version: "", Category: "Productivity", Download: "https://go.microsoft.com/fwlink/p/?linkid=2112886", Notes: "New Teams client", WingetID: "Microsoft.Teams"},
-	{Name: "Zoom", Version: "", Category: "Productivity", Download: "https://zoom.us/client/latest/ZoomInstallerFull.exe", Notes: "", WingetID: "Zoom.Zoom"},
-	{Name: "Slack", Version: "", Category: "Productivity", Download: "https://downloads.slack-edge.com/slack-installers/4.41.105/SlackSetup-x64.exe", Notes: "", WingetID: "SlackTechnologies.Slack"},
+	{Name: "Zoom", Version: "", Category: "Productivity", Download: "https://zoom.us/client/latest/ZoomInstallerFull.exe", Notes: "x64 on 64-bit systems", WingetID: "Zoom.Zoom"},
+	{Name: "Slack", Version: "", Category: "Productivity", Download: "https://cdn.slack-edge.com/bundles/meting-19.8.0/15.8.0.17058/win64/SlackSetup.exe", Notes: "", WingetID: "SlackTechnologies.Slack"},
 	{Name: "Notepad++", Version: "", Category: "Productivity", Download: "https://github.com/notepad-plus-plus/notepad-plus-plus/releases/latest/download/npp.installer.x64.exe", Notes: "", WingetID: "Notepad++.Notepad++"},
+	{Name: "LibreOffice", Version: "", Category: "Productivity", Download: "https://download.documentfoundation.org/libreoffice/stable/25.2.4/win/x86_64/LibreOffice_25.2.4_Win_x86-64.msi", Notes: "64-bit MSI", WingetID: "TheDocumentFoundation.LibreOffice"},
+	{Name: "VLC", Version: "", Category: "Productivity", Download: "https://get.videolan.org/vlc/3.0.21/win64/vlc-3.0.21-win64.exe", Notes: "Media player", WingetID: "VideoLAN.VLC"},
+	{Name: "Adobe Acrobat Reader", Version: "", Category: "Productivity", Download: "https://ardownload2.adobe.com/pub/adobe/acrobat/win/AcrobatDC/2500720030/AcroRdrDCx64_2500720030_MUI.exe", Notes: "PDF reader", WingetID: "Adobe.Acrobat.Reader.64-bit"},
 
 	// Development
 	{Name: "Visual Studio Code", Version: "", Category: "Development", Download: "https://update.code.visualstudio.com/latest/win32-x64-user/stable", Notes: "", WingetID: "Microsoft.VisualStudioCode"},
@@ -78,6 +81,53 @@ var SoftwareCatalog = []*SoftwareItem{
 	// Backup
 	{Name: "Veeam Agent", Version: "", Category: "Backup", Download: "https://download4.veeam.com/VAW_agent_en_setup_x64.exe", Notes: "Free backup agent", WingetID: "Veeam.Agent.Windows"},
 	{Name: "Google Drive", Version: "", Category: "Backup", Download: "https://dl.google.com/drive-file-stream/GoogleDriveSetup.exe", Notes: "File Stream", WingetID: "Google.Drive"},
+
+	// Networking
+	{Name: "Nmap", Version: "", Category: "Networking", Download: "https://nmap.org/dist/nmap-7.97-setup.exe", Notes: "Network scanner", WingetID: "Insecure.Nmap"},
+
+	// Security extras
+	{Name: "1Password", Version: "", Category: "Security", Download: "https://downloads.1password.com/win/1PasswordSetup-x64.msi", Notes: "", WingetID: "AgileBits.1Password"},
+	{Name: "OpenVPN", Version: "", Category: "Security", Download: "https://swupdate.openvpn.org/community/releases/OpenVPN-2.6.12-I001-amd64.msi", Notes: "", WingetID: "OpenVPNTechnologies.OpenVPN"},
+
+	// Media & Office
+	{Name: "VLC", Version: "", Category: "Utilities", Download: "https://get.videolan.org/vlc/3.0.21/win64/vlc-3.0.21-win64.exe", Notes: "Media player", WingetID: "VideoLAN.VLC"},
+	{Name: "LibreOffice", Version: "", Category: "Productivity", Download: "https://download.documentfoundation.org/libreoffice/stable/25.2.4/win/x86_64/LibreOffice_25.2.4_Win_x86-64.msi", Notes: "Office suite", WingetID: "TheDocumentFoundation.LibreOffice"},
+	{Name: "SumatraPDF", Version: "", Category: "Utilities", Download: "https://github.com/sumatrapdfreader/sumatrapdf/releases/latest/download/SumatraPDF-3.5.2-64-install.exe", Notes: "Fast PDF viewer", WingetID: "SumatraPDF.SumatraPDF"},
+	{Name: "Paint.NET", Version: "", Category: "Utilities", Download: "https://www.dotpdn.com/files/paint.net.5.0.14.install.x64.zip", Notes: "Image editor", WingetID: "dotpdn.paintdotnet"},
+	{Name: "IrfanView", Version: "", Category: "Utilities", Download: "https://www.irfanview.com/iview470_x64_setup.exe", Notes: "Image viewer", WingetID: "IrfanView.IrfanView"},
+
+	// Developer tools
+	{Name: "Node.js LTS", Version: "", Category: "Development", Download: "https://nodejs.org/dist/v22.16.0/node-v22.16.0-x64.msi", Notes: "LTS version", WingetID: "OpenJS.NodeJS.LTS"},
+	{Name: "Docker Desktop", Version: "", Category: "Development", Download: "https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe", Notes: "", WingetID: "Docker.DockerDesktop"},
+	{Name: "GitHub Desktop", Version: "", Category: "Development", Download: "https://central.github.com/deployments/desktop/desktop/latest/win32", Notes: "", WingetID: "GitHub.GitHubDesktop"},
+	{Name: "Postman", Version: "", Category: "Development", Download: "https://dl.pstmn.io/download/latest/win64", Notes: "API testing", WingetID: "Postman.Postman"},
+	{Name: "WinMerge", Version: "", Category: "Development", Download: "https://github.com/WinMerge/winmerge/releases/latest/download/WinMerge-2.16.46-x64-Setup.exe", Notes: "File diff tool", WingetID: "WinMerge.WinMerge"},
+
+	// RMM & Admin tools
+	{Name: "DBeaver", Version: "", Category: "Utilities", Download: "https://dbeaver.io/files/dbeaver-ce-latest-win32.win32.x86_64.zip", Notes: "Database GUI", WingetID: "dbeaver.dbeaver"},
+	{Name: "FileZilla", Version: "", Category: "Networking", Download: "https://download.filezilla-project.org/client/FileZilla_3.68.1_win64-setup.exe", Notes: "FTP client", WingetID: "FileZillaProject.FileZilla.Client"},
+	{Name: "Sysinternals Suite", Version: "", Category: "Utilities", Download: "https://download.sysinternals.com/files/SysinternalsSuite.zip", Notes: "Essential IT admin tools", WingetID: "Microsoft.Sysinternals"},
+	{Name: "WizTree", Version: "", Category: "Utilities", Download: "https://diskanalyzer.com/files/wiztree_4_25_setup.exe", Notes: "Disk space analyzer", WingetID: "AntibodySoftware.WizTree"},
+	{Name: "CrystalDiskInfo", Version: "", Category: "Utilities", Download: "https://crystalmark.info/download/CrystalDiskInfo8_17_14.zip", Notes: "Disk health monitor", WingetID: "CrystalDewWorld.CrystalDiskInfo"},
+
+	// Collaboration
+	{Name: "Discord", Version: "", Category: "Productivity", Download: "https://discord.com/api/downloads/distributions/app/installers/win32/x86/DiscordSetup.exe", Notes: "", WingetID: "Discord.Discord"},
+	{Name: "Telegram", Version: "", Category: "Productivity", Download: "https://telegram.org/dl/desktop/win64", Notes: "x64", WingetID: "Telegram.TelegramDesktop"},
+
+	// Entertainment
+	{Name: "Steam", Version: "", Category: "Utilities", Download: "https://cdn.cloudflare.steamstatic.com/client/installer/SteamSetup.exe", Notes: "Game store", WingetID: "Valve.Steam"},
+	{Name: "OBS Studio", Version: "", Category: "Utilities", Download: "https://cdn-fastly.obsproject.com/downloads/OBS-Studio-31.1.2-Windows-Installer.exe", Notes: "Screen recording", WingetID: "OBSProject.OBSStudio"},
+
+	// Productivity extras
+	{Name: "AutoHotkey", Version: "", Category: "Development", Download: "https://www.autohotkey.com/download/ahk-install.exe", Notes: "Scripting for Windows automation", WingetID: "AutoHotkey.AutoHotkey"},
+	{Name: "PowerToys", Version: "", Category: "Utilities", Download: "https://github.com/microsoft/PowerToys/releases/latest/download/PowerToysUserSetup-x64.exe", Notes: "Windows power user tools", WingetID: "Microsoft.PowerToys"},
+	{Name: "O&O ShutUp10", Version: "", Category: "Utilities", Download: "https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe", Notes: "Privacy tool", WingetID: "OO-Software.OOShutUp10"},
+	{Name: "Revo Uninstaller", Version: "", Category: "Utilities", Download: "https://download.revouninstaller.com/download/revouninstallerpro-setup.exe", Notes: "Uninstaller", WingetID: "RevoUninstaller.RevoUninstaller"},
+
+	// Backup extras
+	{Name: "Clonezilla", Version: "", Category: "Backup", Download: "https://sourceforge.net/projects/clonezilla/files/clonezilla_live_stable/", Notes: "Disk cloning (USB boot)", WingetID: ""},
+	{Name: "Macrium Reflect Free", Version: "", Category: "Backup", Download: "https://www.macrium.com/download/reflectionk", Notes: "Disk imaging", WingetID: "ParamountSoftwareUK.MacriumReflectFree"},
+	{Name: "Duplicati", Version: "", Category: "Backup", Download: "https://github.com/duplicati/duplicati/releases/latest/download/duplicati-2.1.1.2_x64.msi", Notes: "Cloud backup", WingetID: "Duplicati.Duplicati"},
 }
 
 // GetSoftwareCatalog returns the curated software list.
@@ -140,12 +190,11 @@ func GetSoftwareVersions(items []*SoftwareItem, softwareDir string) map[string]S
 		sv := SoftwareVersion{
 			Name:            item.Name,
 			InstalledVersion: inst,
-			LatestVersion:   inst,
 			HasDownload:     downloaded[strings.ToLower(item.Name)],
 		}
-		if avail != "" && avail != inst {
+		if avail != "" && isVersion(avail) {
 			sv.LatestVersion = avail
-			sv.UpdateAvailable = true
+			sv.UpdateAvailable = (inst == "" || avail != inst)
 		}
 		result[item.Name] = sv
 	}
@@ -155,6 +204,15 @@ func GetSoftwareVersions(items []*SoftwareItem, softwareDir string) map[string]S
 	versionCacheTime = time.Now()
 	versionMu.Unlock()
 	return result
+}
+
+// isVersion returns true if the string looks like a version number.
+func isVersion(s string) bool {
+	s = strings.TrimSpace(s)
+	if s == "" || s == "winget" || s == "Version" {
+		return false
+	}
+	return strings.ContainsAny(s, "0123456789")
 }
 
 // InvalidateVersionCache forces the next call to re-query winget.

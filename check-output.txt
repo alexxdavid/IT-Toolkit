@@ -1,0 +1,286 @@
+﻿
+> ittoolkit-frontend@1.0.0 check
+> svelte-check --tsconfig ./tsconfig.json
+
+Loading svelte-check in workspace: c:\Gemini\Toolkit\frontend
+Getting Svelte diagnostics...
+
+c:\Gemini\Toolkit\frontend\[32msrc\components\ScriptEditor.svelte[39m:54:3
+[33mWarn[39m: Visible, non-interactive element `<div>` with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+[36m{#if open}
+  [35m<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+    onclick={() => open = false}>
+    <div class="flex h-[85vh] w-[min(900px,92vw)] flex-col overflow-hidden rounded-xl border border-slate-700 bg-slate-900 shadow-2xl"
+      onclick={(e) => e.stopPropagation()}>
+      <!-- Header -->
+      <div class="flex items-center gap-3 border-b border-slate-800 px-5 py-3">
+        <FileCode size="18" class="text-violet-400" />
+        <span class="font-mono text-sm text-white">{fileName}</span>
+        {#if edited}
+          <span class="rounded bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-300">Modified</span>
+        {/if}
+        {#if saved}
+          <span class="rounded bg-emerald-500/15 px-2 py-0.5 text-xs font-medium text-emerald-300">Saved</span>
+        {/if}
+        <div class="flex-1"></div>
+        <button class="flex items-center gap-1.5 rounded-lg border border-white/10 bg-slate-800/60 px-3 py-1.5 text-sm text-slate-300 hover:text-white transition"
+          onclick={copyToClipboard}>
+          <Copy size="14" /> Copy
+        </button>
+        <button class="flex items-center gap-1.5 rounded-lg border border-white/10 bg-slate-800/60 px-3 py-1.5 text-sm text-slate-300 hover:text-white transition"
+          onclick={() => api.reveal(filePath)}>
+          <FolderOpen size="14" /> Open
+        </button>
+        <button class="flex items-center gap-1.5 rounded-lg bg-emerald-500/15 px-3 py-1.5 text-sm font-medium text-emerald-300 ring-1 ring-emerald-500/40 transition hover:bg-emerald-500/25 disabled:opacity-50"
+          onclick={save} disabled={saving || !edited}>
+          <Save size="14" /> Save
+        </button>
+        <button class="rounded p-1.5 text-slate-400 hover:text-white" onclick={() => open = false}>
+          <X size="16" />
+        </button>
+      </div>
+      <!-- Editor -->
+      <div class="flex-1 overflow-auto">
+        {#if loading}
+          <div class="flex items-center justify-center py-16 text-slate-500">Loading…</div>
+        {:else}
+          <textarea
+            bind:value={content}
+            class="w-full h-full min-h-[50vh] resize-none bg-transparent p-5 font-mono text-sm leading-relaxed text-slate-200 outline-none"
+            spellcheck="false"
+            placeholder="Start typing your script…"
+          ></textarea>
+        {/if}
+      </div>
+      <!-- Footer -->
+      <div class="flex items-center justify-between border-t border-slate-800 px-5 py-2 text-xs text-slate-500">
+        <span>{filePath}</span>
+        <span>{content.split('\n').length} lines · {content.length} chars</span>
+      </div>
+    </div>
+  </div>[36m
+{/if}[39m
+
+c:\Gemini\Toolkit\frontend\[32msrc\components\ScriptEditor.svelte[39m:54:3
+[33mWarn[39m: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+[36m{#if open}
+  [35m<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+    onclick={() => open = false}>
+    <div class="flex h-[85vh] w-[min(900px,92vw)] flex-col overflow-hidden rounded-xl border border-slate-700 bg-slate-900 shadow-2xl"
+      onclick={(e) => e.stopPropagation()}>
+      <!-- Header -->
+      <div class="flex items-center gap-3 border-b border-slate-800 px-5 py-3">
+        <FileCode size="18" class="text-violet-400" />
+        <span class="font-mono text-sm text-white">{fileName}</span>
+        {#if edited}
+          <span class="rounded bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-300">Modified</span>
+        {/if}
+        {#if saved}
+          <span class="rounded bg-emerald-500/15 px-2 py-0.5 text-xs font-medium text-emerald-300">Saved</span>
+        {/if}
+        <div class="flex-1"></div>
+        <button class="flex items-center gap-1.5 rounded-lg border border-white/10 bg-slate-800/60 px-3 py-1.5 text-sm text-slate-300 hover:text-white transition"
+          onclick={copyToClipboard}>
+          <Copy size="14" /> Copy
+        </button>
+        <button class="flex items-center gap-1.5 rounded-lg border border-white/10 bg-slate-800/60 px-3 py-1.5 text-sm text-slate-300 hover:text-white transition"
+          onclick={() => api.reveal(filePath)}>
+          <FolderOpen size="14" /> Open
+        </button>
+        <button class="flex items-center gap-1.5 rounded-lg bg-emerald-500/15 px-3 py-1.5 text-sm font-medium text-emerald-300 ring-1 ring-emerald-500/40 transition hover:bg-emerald-500/25 disabled:opacity-50"
+          onclick={save} disabled={saving || !edited}>
+          <Save size="14" /> Save
+        </button>
+        <button class="rounded p-1.5 text-slate-400 hover:text-white" onclick={() => open = false}>
+          <X size="16" />
+        </button>
+      </div>
+      <!-- Editor -->
+      <div class="flex-1 overflow-auto">
+        {#if loading}
+          <div class="flex items-center justify-center py-16 text-slate-500">Loading…</div>
+        {:else}
+          <textarea
+            bind:value={content}
+            class="w-full h-full min-h-[50vh] resize-none bg-transparent p-5 font-mono text-sm leading-relaxed text-slate-200 outline-none"
+            spellcheck="false"
+            placeholder="Start typing your script…"
+          ></textarea>
+        {/if}
+      </div>
+      <!-- Footer -->
+      <div class="flex items-center justify-between border-t border-slate-800 px-5 py-2 text-xs text-slate-500">
+        <span>{filePath}</span>
+        <span>{content.split('\n').length} lines · {content.length} chars</span>
+      </div>
+    </div>
+  </div>[36m
+{/if}[39m
+
+c:\Gemini\Toolkit\frontend\[32msrc\components\ScriptEditor.svelte[39m:56:5
+[33mWarn[39m: Visible, non-interactive element `<div>` with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+[36m    onclick={() => open = false}>
+    [35m<div class="flex h-[85vh] w-[min(900px,92vw)] flex-col overflow-hidden rounded-xl border border-slate-700 bg-slate-900 shadow-2xl"
+      onclick={(e) => e.stopPropagation()}>
+      <!-- Header -->
+      <div class="flex items-center gap-3 border-b border-slate-800 px-5 py-3">
+        <FileCode size="18" class="text-violet-400" />
+        <span class="font-mono text-sm text-white">{fileName}</span>
+        {#if edited}
+          <span class="rounded bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-300">Modified</span>
+        {/if}
+        {#if saved}
+          <span class="rounded bg-emerald-500/15 px-2 py-0.5 text-xs font-medium text-emerald-300">Saved</span>
+        {/if}
+        <div class="flex-1"></div>
+        <button class="flex items-center gap-1.5 rounded-lg border border-white/10 bg-slate-800/60 px-3 py-1.5 text-sm text-slate-300 hover:text-white transition"
+          onclick={copyToClipboard}>
+          <Copy size="14" /> Copy
+        </button>
+        <button class="flex items-center gap-1.5 rounded-lg border border-white/10 bg-slate-800/60 px-3 py-1.5 text-sm text-slate-300 hover:text-white transition"
+          onclick={() => api.reveal(filePath)}>
+          <FolderOpen size="14" /> Open
+        </button>
+        <button class="flex items-center gap-1.5 rounded-lg bg-emerald-500/15 px-3 py-1.5 text-sm font-medium text-emerald-300 ring-1 ring-emerald-500/40 transition hover:bg-emerald-500/25 disabled:opacity-50"
+          onclick={save} disabled={saving || !edited}>
+          <Save size="14" /> Save
+        </button>
+        <button class="rounded p-1.5 text-slate-400 hover:text-white" onclick={() => open = false}>
+          <X size="16" />
+        </button>
+      </div>
+      <!-- Editor -->
+      <div class="flex-1 overflow-auto">
+        {#if loading}
+          <div class="flex items-center justify-center py-16 text-slate-500">Loading…</div>
+        {:else}
+          <textarea
+            bind:value={content}
+            class="w-full h-full min-h-[50vh] resize-none bg-transparent p-5 font-mono text-sm leading-relaxed text-slate-200 outline-none"
+            spellcheck="false"
+            placeholder="Start typing your script…"
+          ></textarea>
+        {/if}
+      </div>
+      <!-- Footer -->
+      <div class="flex items-center justify-between border-t border-slate-800 px-5 py-2 text-xs text-slate-500">
+        <span>{filePath}</span>
+        <span>{content.split('\n').length} lines · {content.length} chars</span>
+      </div>
+    </div>[36m
+  </div>[39m
+
+c:\Gemini\Toolkit\frontend\[32msrc\components\ScriptEditor.svelte[39m:56:5
+[33mWarn[39m: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+[36m    onclick={() => open = false}>
+    [35m<div class="flex h-[85vh] w-[min(900px,92vw)] flex-col overflow-hidden rounded-xl border border-slate-700 bg-slate-900 shadow-2xl"
+      onclick={(e) => e.stopPropagation()}>
+      <!-- Header -->
+      <div class="flex items-center gap-3 border-b border-slate-800 px-5 py-3">
+        <FileCode size="18" class="text-violet-400" />
+        <span class="font-mono text-sm text-white">{fileName}</span>
+        {#if edited}
+          <span class="rounded bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-300">Modified</span>
+        {/if}
+        {#if saved}
+          <span class="rounded bg-emerald-500/15 px-2 py-0.5 text-xs font-medium text-emerald-300">Saved</span>
+        {/if}
+        <div class="flex-1"></div>
+        <button class="flex items-center gap-1.5 rounded-lg border border-white/10 bg-slate-800/60 px-3 py-1.5 text-sm text-slate-300 hover:text-white transition"
+          onclick={copyToClipboard}>
+          <Copy size="14" /> Copy
+        </button>
+        <button class="flex items-center gap-1.5 rounded-lg border border-white/10 bg-slate-800/60 px-3 py-1.5 text-sm text-slate-300 hover:text-white transition"
+          onclick={() => api.reveal(filePath)}>
+          <FolderOpen size="14" /> Open
+        </button>
+        <button class="flex items-center gap-1.5 rounded-lg bg-emerald-500/15 px-3 py-1.5 text-sm font-medium text-emerald-300 ring-1 ring-emerald-500/40 transition hover:bg-emerald-500/25 disabled:opacity-50"
+          onclick={save} disabled={saving || !edited}>
+          <Save size="14" /> Save
+        </button>
+        <button class="rounded p-1.5 text-slate-400 hover:text-white" onclick={() => open = false}>
+          <X size="16" />
+        </button>
+      </div>
+      <!-- Editor -->
+      <div class="flex-1 overflow-auto">
+        {#if loading}
+          <div class="flex items-center justify-center py-16 text-slate-500">Loading…</div>
+        {:else}
+          <textarea
+            bind:value={content}
+            class="w-full h-full min-h-[50vh] resize-none bg-transparent p-5 font-mono text-sm leading-relaxed text-slate-200 outline-none"
+            spellcheck="false"
+            placeholder="Start typing your script…"
+          ></textarea>
+        {/if}
+      </div>
+      <!-- Footer -->
+      <div class="flex items-center justify-between border-t border-slate-800 px-5 py-2 text-xs text-slate-500">
+        <span>{filePath}</span>
+        <span>{content.split('\n').length} lines · {content.length} chars</span>
+      </div>
+    </div>[36m
+  </div>[39m
+
+c:\Gemini\Toolkit\frontend\[32msrc\components\ScriptsTab.svelte[39m:6:17
+[31mError[39m: Module '"../../wailsjs/go/models"' has no exported member 'ScriptFile'. (ts)
+[36m  import { formatSize } from '../lib/format'
+  import type { [35mScriptFile[36m } from '../../wailsjs/go/models'
+  import { Folder, FileCode, ChevronRight, ChevronDown, Search, X, Copy, FolderOpen, Plus, Upload } from 'lucide-svelte'[39m
+
+c:\Gemini\Toolkit\frontend\[32msrc\components\LocalTab.svelte[39m:93:15
+[33mWarn[39m: Visible, non-interactive element `<div>` with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+[36m            <div class="rounded-xl border border-white/5 bg-slate-800/50 overflow-hidden transition hover:border-white/10">
+              [35m<div class="flex items-center gap-3 px-4 py-3 cursor-pointer transition hover:bg-white/5"
+                onclick={() => expandRepo(repo)}>
+                {#if expandedRepo === repo.name}
+                  <ChevronDown size="16" class="shrink-0 text-slate-400" />
+                {:else}
+                  <ChevronRight size="16" class="shrink-0 text-slate-400" />
+                {/if}
+                <Folder size="14" class="shrink-0 text-amber-400" />
+                <span class="font-mono text-xs font-semibold text-white">{repo.name}</span>
+                <div class="flex-1"></div>
+                <button class="shrink-0 rounded-md border border-white/10 px-2 py-1 text-[10px] text-slate-400 hover:text-white transition"
+                  onclick={(e: MouseEvent) => { e.stopPropagation(); api.reveal(repo.path) }}>
+                  <ExternalLink size="10" /> Open
+                </button>
+              </div>[36m
+              {#if expandedRepo === repo.name}[39m
+
+c:\Gemini\Toolkit\frontend\[32msrc\components\LocalTab.svelte[39m:93:15
+[33mWarn[39m: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+[36m            <div class="rounded-xl border border-white/5 bg-slate-800/50 overflow-hidden transition hover:border-white/10">
+              [35m<div class="flex items-center gap-3 px-4 py-3 cursor-pointer transition hover:bg-white/5"
+                onclick={() => expandRepo(repo)}>
+                {#if expandedRepo === repo.name}
+                  <ChevronDown size="16" class="shrink-0 text-slate-400" />
+                {:else}
+                  <ChevronRight size="16" class="shrink-0 text-slate-400" />
+                {/if}
+                <Folder size="14" class="shrink-0 text-amber-400" />
+                <span class="font-mono text-xs font-semibold text-white">{repo.name}</span>
+                <div class="flex-1"></div>
+                <button class="shrink-0 rounded-md border border-white/10 px-2 py-1 text-[10px] text-slate-400 hover:text-white transition"
+                  onclick={(e: MouseEvent) => { e.stopPropagation(); api.reveal(repo.path) }}>
+                  <ExternalLink size="10" /> Open
+                </button>
+              </div>[36m
+              {#if expandedRepo === repo.name}[39m
+
+c:\Gemini\Toolkit\frontend\[32msrc\components\Settings.svelte[39m:42:3
+[31mError[39m: Cannot find name 'onMount'. (ts)
+[36m
+  [35monMount[36m(async () => {
+    await refresh()[39m
+
+====================================
+[31msvelte-check found 2 errors and 6 warnings in 4 files
+[39m

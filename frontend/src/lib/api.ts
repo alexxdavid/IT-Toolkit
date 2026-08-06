@@ -14,6 +14,10 @@ export async function pickFolder(): Promise<string | null> {
   return App.PickFolder()
 }
 
+export async function pickFile(): Promise<string | null> {
+  return App.PickFile()
+}
+
 export function onScanProgress(cb: (p: ScanProgress) => void): () => void {
   return EventsOn('scan:progress', cb)
 }
@@ -43,6 +47,8 @@ export function onInstallDone(cb: () => void): () => void {
 }
 
 export const api = {
+  pickFolder: (): Promise<string | null> => App.PickFolder(),
+  pickFile: (): Promise<string | null> => App.PickFile(),
   getCatalog: (): Promise<CatalogView> => App.GetCatalog(),
   rescan: (): Promise<string> => App.RescanAll(),
   addFolder: (path: string) => App.AddFolder(path),
@@ -70,11 +76,22 @@ export const api = {
   getRecommendedRepos: (): Promise<any[]> => App.GetRecommendedRepos(),
   isRepoInstalled: (name: string, dest: string): Promise<boolean> => App.IsRepoInstalled(name, dest),
   removeRepo: (name: string, dest: string): Promise<void> => App.RemoveRepo(name, dest),
+  listLocalRepos: (): Promise<any[]> => App.ListLocalRepos(),
+  listLocalSoftware: (): Promise<any[]> => App.ListLocalSoftware(),
+  getRepoContents: (path: string): Promise<any[]> => App.GetRepoContents(path),
+  listScriptsLib: (): Promise<any[]> => App.ListScriptsLib(),
+  getScriptLibContent: (id: number): Promise<string> => App.GetScriptLibContent(id),
+  createScriptLib: (name: string, category: string): Promise<number> => App.CreateScriptLib(name, category),
+  saveScriptLib: (id: number, content: string): Promise<void> => App.SaveScriptLib(id, content),
+  deleteScriptLib: (id: number): Promise<void> => App.DeleteScriptLib(id),
+  libraryCategories: (): Promise<string[]> => App.LibraryCategories(),
+  importScriptToLib: (source: string, category: string): Promise<number> => App.ImportScriptToLib(source, category),
   checkForUpdate: (force: boolean): Promise<any> => App.CheckForUpdate(force),
   downloadUpdate: (url: string, version: string): Promise<string> => App.DownloadUpdate(url, version),
   getUpdateProgress: (): Promise<any> => App.GetUpdateProgress(),
   applyUpdate: (path: string): Promise<void> => App.ApplyUpdate(path),
   getCurrentVersion: (): Promise<string> => App.GetCurrentVersion(),
+  getCurrentBuild: (): Promise<number> => App.GetCurrentBuild(),
   listCustomCategories: (): Promise<any[]> => App.ListCustomCategories(),
   createCustomCategory: (name: string): Promise<any> => App.CreateCustomCategory(name),
   renameCustomCategory: (id: number, name: string): Promise<void> => App.RenameCustomCategory(id, name),
@@ -85,5 +102,12 @@ export const api = {
   listCustomSoftware: (): Promise<any[]> => App.ListCustomSoftware(),
   addCustomSoftware: (name: string, version: string, category: string, download: string, notes: string, wingetId: string): Promise<any> => App.AddCustomSoftware(name, version, category, download, notes, wingetId),
   removeCustomSoftware: (id: number): Promise<void> => App.RemoveCustomSoftware(id),
-  getRecommendedReposCombined: (): Promise<any[]> => App.GetRecommendedReposCombined()
+  getRecommendedReposCombined: (): Promise<any[]> => App.GetRecommendedReposCombined(),
+  toggleFavorite: (kind: string, name: string): Promise<boolean> => App.ToggleFavorite(kind, name),
+  listFavorites: (kind: string): Promise<string[]> => App.ListFavorites(kind),
+  hideItem: (kind: string, name: string): Promise<void> => App.HideItem(kind, name),
+  restoreItem: (kind: string, name: string): Promise<void> => App.RestoreItem(kind, name),
+  listHidden: (kind: string): Promise<string[]> => App.ListHidden(kind),
+  copyToFavorites: (source: string, dest: string): Promise<string> => App.CopyToFavorites(source, dest),
+  getFavoritesSummary: (): Promise<Record<string, number>> => App.GetFavoritesSummary()
 }

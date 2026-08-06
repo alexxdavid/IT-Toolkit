@@ -13,6 +13,8 @@ export const ui = $state({
   exportOpen: false,
   libraryOpen: true,
   settingsOpen: false,
+  localTab: 'local' as 'repos' | 'software' | 'scripts' | 'local' | 'favorites',
+  scriptsFolder: '' as string,
   loadError: '' as string
 })
 
@@ -78,6 +80,10 @@ export function setBrowserLoading(v: boolean) {
 
 export function setExportOpen(v: boolean) {
   ui.exportOpen = v
+}
+
+export function setLocalTab(v: 'repos' | 'software' | 'scripts' | 'local' | 'favorites') {
+  ui.localTab = v
 }
 
 export function setLibraryOpen(v: boolean) {

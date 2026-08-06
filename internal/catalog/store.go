@@ -100,6 +100,25 @@ func (s *Store) migrate() error {
 			winget_id TEXT NOT NULL DEFAULT '',
 			UNIQUE(name)
 		)`,
+		`CREATE TABLE IF NOT EXISTS favorites (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			kind TEXT NOT NULL,
+			name TEXT NOT NULL,
+			UNIQUE(kind, name)
+		)`,
+		`CREATE TABLE IF NOT EXISTS script_library (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			name TEXT NOT NULL,
+			category TEXT NOT NULL DEFAULT 'Uncategorized',
+			content TEXT NOT NULL DEFAULT '',
+			size INTEGER NOT NULL DEFAULT 0
+		)`,
+		`CREATE TABLE IF NOT EXISTS hidden_items (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			kind TEXT NOT NULL,
+			name TEXT NOT NULL,
+			UNIQUE(kind, name)
+		)`,
 	}
 	for _, q := range stmts {
 		if _, err := s.db.Exec(q); err != nil {
@@ -809,4 +828,207 @@ func (s *Store) AddCustomSoftware(name, version, category, download, notes, wing
 func (s *Store) RemoveCustomSoftware(id int64) error {
 	_, err := s.db.Exec(`DELETE FROM custom_software WHERE id = ?`, id)
 	return err
+}
+
+// --- Favorites ---
+
+// ListFavorites returns favorited item names for a kind ("repo" or "software").
+func (s *Store) ListFavorites(kind string) ([]string, error) {
+	rows, err := s.db.Query(`SELECT name FROM favorites WHERE kind = ? ORDER BY name`, kind)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var out []string
+	for rows.Next() {
+		var name string
+		if err := rows.Scan(&name); err != nil {
+			return nil, err
+		}
+		out = append(out, name)
+	}
+	if out == nil {
+		out = []string{}
+	}
+	return out, rows.Err()
+}
+
+// IsFavorite reports whether an item is favorited.
+func (s *Store) IsFavorite(kind, name string) (bool, error) {
+	var id int64
+	err := s.db.QueryRow(`SELECT id FROM favorites WHERE kind = ? AND name = ?`, kind, name).Scan(&id)
+	if err == sql.ErrNoRows {
+		return false, nil
+	}
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+// ToggleFavorite flips favorite state and returns the new state.
+func (s *Store) ToggleFavorite(kind, name string) (bool, error) {
+	exists, err := s.IsFavorite(kind, name)
+	if err != nil {
+		return false, err
+	}
+	if exists {
+		_, err = s.db.Exec(`DELETE FROM favorites WHERE kind = ? AND name = ?`, kind, name)
+		return false, err
+	}
+	_, err = s.db.Exec(`INSERT INTO favorites (kind, name) VALUES (?, ?)`, kind, name)
+	return true, err
+}
+
+// --- Script Library ---
+
+// ScriptRow is a script stored in the library database.
+type ScriptRow struct {
+	ID       int64  `json:"id"`
+	Name     string `json:"name"`
+	Category string `json:"category"`
+	Size     int64  `json:"size"`
+}
+
+// LibrarySeedEntry is one script inside the bundled seed file.
+type LibrarySeedEntry struct {
+	Name     string `json:"name"`
+	Category string `json:"category"`
+	Content  string `json:"content"`
+}
+
+// ListLibraryScripts returns all scripts in the library.
+func (s *Store) ListLibraryScripts() ([]*ScriptRow, error) {
+	rows, err := s.db.Query(`SELECT id, name, category, size FROM script_library ORDER BY category, name`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var out []*ScriptRow
+	for rows.Next() {
+		r := &ScriptRow{}
+		if err := rows.Scan(&r.ID, &r.Name, &r.Category, &r.Size); err != nil {
+			return nil, err
+		}
+		out = append(out, r)
+	}
+	if out == nil {
+		out = []*ScriptRow{}
+	}
+	return out, rows.Err()
+}
+
+// LibraryScriptCount returns the number of scripts in the library.
+func (s *Store) LibraryScriptCount() (int, error) {
+	var n int
+	err := s.db.QueryRow(`SELECT count(*) FROM script_library`).Scan(&n)
+	return n, err
+}
+
+// GetLibraryScript returns a script's full content.
+func (s *Store) GetLibraryScript(id int64) (string, error) {
+	var content string
+	err := s.db.QueryRow(`SELECT content FROM script_library WHERE id = ?`, id).Scan(&content)
+	return content, err
+}
+
+// CreateLibraryScript adds a script to the library.
+func (s *Store) CreateLibraryScript(name, category, content string) (int64, error) {
+	res, err := s.db.Exec(
+		`INSERT INTO script_library (name, category, content, size) VALUES (?, ?, ?, ?)`,
+		name, category, content, int64(len(content)),
+	)
+	if err != nil {
+		return 0, err
+	}
+	return res.LastInsertId()
+}
+
+// SaveLibraryScript updates a script's content.
+func (s *Store) SaveLibraryScript(id int64, content string) error {
+	_, err := s.db.Exec(`UPDATE script_library SET content = ?, size = ? WHERE id = ?`, content, int64(len(content)), id)
+	return err
+}
+
+// DeleteLibraryScript removes a script from the library.
+func (s *Store) DeleteLibraryScript(id int64) error {
+	_, err := s.db.Exec(`DELETE FROM script_library WHERE id = ?`, id)
+	return err
+}
+
+// ImportLibrarySeed bulk-loads scripts into the library (used on first run).
+func (s *Store) ImportLibrarySeed(entries []LibrarySeedEntry) error {
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	for _, e := range entries {
+		if e.Name == "" {
+			continue
+		}
+		if _, err := tx.Exec(
+			`INSERT INTO script_library (name, category, content, size) VALUES (?, ?, ?, ?)`,
+			e.Name, e.Category, e.Content, int64(len(e.Content)),
+		); err != nil {
+			return err
+		}
+	}
+	return tx.Commit()
+}
+
+// LibraryCategories returns the distinct categories in the library.
+func (s *Store) LibraryCategories() ([]string, error) {
+	rows, err := s.db.Query(`SELECT DISTINCT category FROM script_library ORDER BY category`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var out []string
+	for rows.Next() {
+		var c string
+		if err := rows.Scan(&c); err != nil {
+			return nil, err
+		}
+		out = append(out, c)
+	}
+	if out == nil {
+		out = []string{}
+	}
+	return out, rows.Err()
+}
+
+// --- Hidden Items (per-user catalog personalization) ---
+
+// HideItem marks an item (kind: "repo" | "software") as hidden for this user.
+func (s *Store) HideItem(kind, name string) error {
+	_, err := s.db.Exec(`INSERT OR IGNORE INTO hidden_items (kind, name) VALUES (?, ?)`, kind, name)
+	return err
+}
+
+// RestoreItem unhides an item.
+func (s *Store) RestoreItem(kind, name string) error {
+	_, err := s.db.Exec(`DELETE FROM hidden_items WHERE kind = ? AND name = ?`, kind, name)
+	return err
+}
+
+// ListHidden returns names hidden for the given kind.
+func (s *Store) ListHidden(kind string) ([]string, error) {
+	rows, err := s.db.Query(`SELECT name FROM hidden_items WHERE kind = ? ORDER BY name`, kind)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var out []string
+	for rows.Next() {
+		var n string
+		if err := rows.Scan(&n); err != nil {
+			return nil, err
+		}
+		out = append(out, n)
+	}
+	if out == nil {
+		out = []string{}
+	}
+	return out, rows.Err()
 }
