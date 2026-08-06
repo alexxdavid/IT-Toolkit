@@ -1,0 +1,20 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "ittoolkit",
+  "outputfilename": "ITToolkit",
+  "frontend:install": "npm install",
+  "frontend:build": "npm run build",
+  "frontend:dev:watcher": "npm run dev",
+  "frontend:dev:serverUrl": "auto",
+  "author": {
+    "name": "Solutions IT Toolkit",
+    "email": ""
+  },
+  "info": {
+    "companyName": "Solutions IT Toolkit",
+    "productName": "Solutions IT Toolkit",
+    "productVersion": "1.0.0",
+    "copyright": "Copyright (c) 2026",
+    "comments": "IT script catalog and tooling console"
+  }
+}

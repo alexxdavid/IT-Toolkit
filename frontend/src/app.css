@@ -1,0 +1,135 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Cascadia Code', Consolas, 'SF Mono', monospace;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  background: #0b1120;
+  color: #e2e8f0;
+  font-family: var(--font-sans);
+  overflow: hidden;
+  user-select: none;
+}
+
+#app {
+  height: 100%;
+}
+
+pre,
+code {
+  user-select: text;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 6px;
+  border: 2px solid #0f172a;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+.hljs {
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+.markdown-body {
+  user-select: text;
+  line-height: 1.6;
+  font-size: 0.875rem;
+}
+.markdown-body h1 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  border-bottom: 1px solid #1e293b;
+  padding-bottom: 0.4rem;
+  margin: 0 0 0.75rem;
+  color: #f1f5f9;
+}
+.markdown-body h2 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 1rem 0 0.5rem;
+  color: #e2e8f0;
+}
+.markdown-body h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0.75rem 0 0.4rem;
+  color: #e2e8f0;
+}
+.markdown-body p {
+  margin: 0.5rem 0;
+}
+.markdown-body a {
+  color: #38bdf8;
+  text-decoration: underline;
+}
+.markdown-body code {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 4px;
+  padding: 0.1rem 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+.markdown-body pre {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 6px;
+  padding: 0.75rem;
+  overflow-x: auto;
+  margin: 0.5rem 0;
+}
+.markdown-body pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 1.4rem;
+  margin: 0.5rem 0;
+}
+.markdown-body ul {
+  list-style: disc;
+}
+.markdown-body ol {
+  list-style: decimal;
+}
+.markdown-body li {
+  margin: 0.15rem 0;
+}
+.markdown-body table {
+  border-collapse: collapse;
+  margin: 0.5rem 0;
+  font-size: 0.8rem;
+}
+.markdown-body th,
+.markdown-body td {
+  border: 1px solid #1e293b;
+  padding: 0.3rem 0.6rem;
+}
+.markdown-body blockquote {
+  border-left: 3px solid #334155;
+  padding-left: 0.75rem;
+  color: #94a3b8;
+  margin: 0.5rem 0;
+}
+.markdown-body hr {
+  border-color: #1e293b;
+  margin: 0.75rem 0;
+}
