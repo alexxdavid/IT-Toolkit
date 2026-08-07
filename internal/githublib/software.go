@@ -90,8 +90,6 @@ var SoftwareCatalog = []*SoftwareItem{
 	{Name: "OpenVPN", Version: "", Category: "Security", Download: "https://swupdate.openvpn.org/community/releases/OpenVPN-2.6.12-I001-amd64.msi", Notes: "", WingetID: "OpenVPNTechnologies.OpenVPN"},
 
 	// Media & Office
-	{Name: "VLC", Version: "", Category: "Utilities", Download: "https://get.videolan.org/vlc/3.0.21/win64/vlc-3.0.21-win64.exe", Notes: "Media player", WingetID: "VideoLAN.VLC"},
-	{Name: "LibreOffice", Version: "", Category: "Productivity", Download: "https://download.documentfoundation.org/libreoffice/stable/25.2.4/win/x86_64/LibreOffice_25.2.4_Win_x86-64.msi", Notes: "Office suite", WingetID: "TheDocumentFoundation.LibreOffice"},
 	{Name: "SumatraPDF", Version: "", Category: "Utilities", Download: "https://github.com/sumatrapdfreader/sumatrapdf/releases/latest/download/SumatraPDF-3.5.2-64-install.exe", Notes: "Fast PDF viewer", WingetID: "SumatraPDF.SumatraPDF"},
 	{Name: "Paint.NET", Version: "", Category: "Utilities", Download: "https://www.dotpdn.com/files/paint.net.5.0.14.install.x64.zip", Notes: "Image editor", WingetID: "dotpdn.paintdotnet"},
 	{Name: "IrfanView", Version: "", Category: "Utilities", Download: "https://www.irfanview.com/iview470_x64_setup.exe", Notes: "Image viewer", WingetID: "IrfanView.IrfanView"},

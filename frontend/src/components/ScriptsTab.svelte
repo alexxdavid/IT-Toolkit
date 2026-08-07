@@ -208,15 +208,14 @@
         </div>
       {:else}
         <!-- Table header -->
-        <div class="grid grid-cols-[1fr_120px_80px_100px] gap-2 px-4 py-2 text-[11px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-800/50">
+        <div class="grid grid-cols-[1fr_150px_100px] gap-2 px-4 py-2 text-[11px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-800/50">
           <span>Name</span>
           <span>Category</span>
-          <span>Language</span>
           <span class="text-right">Size</span>
         </div>
         <!-- Script rows -->
             {#each filtered as sc (sc.id)}
-          <div class="group grid grid-cols-[1fr_120px_80px_100px] gap-2 items-center px-4 py-2.5 border-b border-slate-800/30 hover:bg-white/5 transition cursor-pointer"
+          <div class="group grid grid-cols-[1fr_150px_100px] gap-2 items-center px-4 py-2.5 border-b border-slate-800/30 hover:bg-white/5 transition cursor-pointer"
             role="button" tabindex="0"
             onclick={() => editScript(sc)}
             onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); editScript(sc) } }}>
@@ -225,9 +224,8 @@
               <span class="truncate font-mono text-sm font-medium text-white hover:text-violet-300 transition">{sc.name}</span>
             </div>
             <span class="shrink-0 rounded-lg border border-white/10 bg-slate-950/60 px-2 py-0.5 text-[10px] font-semibold {categoryColor(sc.category)}">{sc.category}</span>
-            <span class="shrink-0 rounded border px-2 py-0.5 text-[10px] font-semibold {langBadge(langOf(sc.name))}">{langOf(sc.name)}</span>
             <div class="flex items-center justify-end gap-1">
-              <span class="text-[10px] text-slate-500 w-14 text-right">{formatSize(sc.size)}</span>
+              <span class="text-[10px] text-slate-500 w-16 text-right">{formatSize(sc.size)}</span>
               <div class="flex gap-0.5 opacity-0 group-hover:opacity-100 ml-2">
                 <button class="rounded p-1 {scriptFavorites[sc.name] ? 'text-amber-400' : 'text-slate-400 hover:text-amber-400'}"
                   title={scriptFavorites[sc.name] ? 'Remove from favorites' : 'Add to favorites'}
