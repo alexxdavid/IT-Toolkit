@@ -6,6 +6,7 @@
   import Settings from './components/Settings.svelte'
   import { api } from './lib/api'
   import { ui, setCatalog } from './lib/store.svelte'
+  import logo from './lib/assets/logo.png'
 
   let scanErr = $state<string | null>(null)
 
@@ -25,6 +26,11 @@
 </script>
 
 <div class="flex h-screen flex-col bg-[#0b1120]">
+  <!-- Logo top-right -->
+  <div class="pointer-events-none absolute top-2 right-3 z-40">
+    <img src={logo} alt="Solutions IT" class="h-10 w-auto object-contain" />
+  </div>
+
   {#if ui.settingsOpen}
     <div class="flex min-h-0 flex-1 overflow-hidden">
       <Sidebar />

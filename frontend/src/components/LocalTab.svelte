@@ -1,7 +1,8 @@
 <script lang="ts">
   import { api } from '../lib/api'
-  import { Folder, FileText, Download, RefreshCw, ChevronRight, ChevronDown, ExternalLink } from 'lucide-svelte'
+  import { Folder, FileText, Download, ChevronRight, ChevronDown, ExternalLink } from 'lucide-svelte'
   import { onMount } from 'svelte'
+  import { ui } from '../lib/store.svelte'
 
   let repos = $state<any[]>([])
   let software = $state<any[]>([])
@@ -31,6 +32,11 @@
 
   onMount(load)
 
+  // Reload whenever the Local tab is opened (files may change on disk).
+  $effect(() => {
+    if (ui.localTab === 'local') load()
+  })
+
   async function expandRepo(repo: any) {
     if (expandedRepo === repo.name) {
       expandedRepo = null
@@ -59,10 +65,6 @@
         <h2 class="text-lg font-bold text-white">Downloaded</h2>
         <p class="text-xs text-slate-400">{repos.length} repos · {software.length} software installed</p>
       </div>
-      <button class="rounded-lg border border-white/10 bg-slate-800/60 px-3 py-2 text-xs text-slate-300 hover:text-white transition"
-        onclick={load}>
-        <RefreshCw size="14" />
-      </button>
     </div>
 
     <!-- Toggle: Repos / Software -->

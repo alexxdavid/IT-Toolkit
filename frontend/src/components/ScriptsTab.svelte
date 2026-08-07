@@ -5,7 +5,7 @@
   import { formatSize } from '../lib/format'
   import type { catalog } from '../../wailsjs/go/models'
   type ScriptFile = catalog.ScriptFile
-  import { FileCode, Search, X, Plus, Upload, Trash2, RefreshCw, Star, Eye, Copy } from 'lucide-svelte'
+  import { FileCode, Search, X, Plus, Upload, Trash2, Star, Eye, Copy } from 'lucide-svelte'
   import ScriptEditor from './ScriptEditor.svelte'
 
   let scripts = $state<any[]>([])
@@ -171,7 +171,7 @@
   <!-- Right panel: scripts table -->
   <div class="flex min-w-0 flex-1 min-h-0 flex-col">
     <!-- Header -->
-    <div class="flex shrink-0 items-center gap-3 border-b border-slate-800 bg-slate-900/60 px-4 py-2.5">
+    <div class="flex shrink-0 items-center gap-3 border-b border-slate-800 bg-slate-900/60 px-4 pr-24 py-2.5">
       <div class="relative flex-1 max-w-md">
         <Search size="14" class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
         <input bind:value={searchQuery} placeholder="Search scripts…"
@@ -184,8 +184,6 @@
       </div>
       <div class="flex-1"></div>
       <span class="text-sm text-slate-500">{filtered.length} scripts</span>
-      <button class="rounded-lg border border-white/10 bg-slate-800/60 px-3 py-2 text-sm text-slate-300 hover:text-white transition"
-        onclick={load}><RefreshCw size="15" /></button>
     </div>
 
     <!-- Table -->
@@ -208,14 +206,14 @@
         </div>
       {:else}
         <!-- Table header -->
-        <div class="grid grid-cols-[1fr_150px_100px] gap-2 px-4 py-2 text-[11px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-800/50">
+        <div class="grid grid-cols-[1fr_150px_80px] gap-2 px-4 py-2 text-[11px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-800/50">
           <span>Name</span>
           <span>Category</span>
           <span class="text-right">Size</span>
         </div>
         <!-- Script rows -->
             {#each filtered as sc (sc.id)}
-          <div class="group grid grid-cols-[1fr_150px_100px] gap-2 items-center px-4 py-2.5 border-b border-slate-800/30 hover:bg-white/5 transition cursor-pointer"
+          <div class="group grid grid-cols-[1fr_150px_80px] gap-2 items-center px-4 py-2.5 border-b border-slate-800/30 hover:bg-white/5 transition cursor-pointer"
             role="button" tabindex="0"
             onclick={() => editScript(sc)}
             onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); editScript(sc) } }}>
@@ -224,8 +222,7 @@
               <span class="truncate font-mono text-sm font-medium text-white hover:text-violet-300 transition">{sc.name}</span>
             </div>
             <span class="shrink-0 rounded-lg border border-white/10 bg-slate-950/60 px-2 py-0.5 text-[10px] font-semibold {categoryColor(sc.category)}">{sc.category}</span>
-            <div class="flex items-center justify-end gap-1">
-              <span class="text-[10px] text-slate-500 w-16 text-right">{formatSize(sc.size)}</span>
+            <span class="shrink-0 whitespace-nowrap text-[10px] text-slate-500 text-right">{formatSize(sc.size)}</span>
               <div class="flex gap-0.5 opacity-0 group-hover:opacity-100 ml-2">
                 <button class="rounded p-1 {scriptFavorites[sc.name] ? 'text-amber-400' : 'text-slate-400 hover:text-amber-400'}"
                   title={scriptFavorites[sc.name] ? 'Remove from favorites' : 'Add to favorites'}
@@ -240,7 +237,6 @@
                   onclick={(e) => { e.stopPropagation(); deleteScript(sc) }}><Trash2 size="13" /></button>
               </div>
             </div>
-          </div>
         {/each}
       {/if}
     </div>
