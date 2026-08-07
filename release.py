@@ -42,6 +42,9 @@ def github_api(method, url, token, data=None):
     if body:
         headers["Content-Type"] = "application/json"
     req = urllib.request.Request(url, data=body, headers=headers, method=method)
+    if method == "DELETE":
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            return None
     with urllib.request.urlopen(req, timeout=60) as resp:
         raw = resp.read().decode("utf-8").strip()
         return json.loads(raw) if raw else None
@@ -154,6 +157,16 @@ def create_release(version, build, notes, installer_path, token):
     if release is None:
         release = github_api("POST", f"https://api.github.com/repos/{GITHUB_USER}/{RELEASES_REPO}/releases", token,
                              {"tag_name": tag, "name": f"Solutions IT Toolkit v{version}", "body": notes or f"Release v{version}", "draft": False, "prerelease": False})
+
+    # Delete old installer assets for this version so only the newest remains.
+    prefix = f"SITTOOLKIT-Setup-{version}"
+    for a in release.get("assets", []):
+        if a.get("name", "").startswith(prefix):
+            try:
+                github_api("DELETE", f"https://api.github.com/repos/{GITHUB_USER}/{RELEASES_REPO}/releases/assets/{a['id']}", token)
+                print(f"  Deleted old asset {a['name']}")
+            except Exception:
+                pass
 
     upload_url = release["upload_url"].split("{")[0]
     asset_name = f"SITTOOLKIT-Setup-{version}.b{build}.exe"

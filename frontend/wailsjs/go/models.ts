@@ -374,6 +374,13 @@ export namespace githublib {
 	    download: string;
 	    notes: string;
 	    wingetId: string;
+	    manufacturer: string;
+	    description: string;
+	    license: string;
+	    installerType: string;
+	    architecture: string;
+	    officialSite: string;
+	    silentArgs: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new SoftwareItem(source);
@@ -387,6 +394,13 @@ export namespace githublib {
 	        this.download = source["download"];
 	        this.notes = source["notes"];
 	        this.wingetId = source["wingetId"];
+	        this.manufacturer = source["manufacturer"];
+	        this.description = source["description"];
+	        this.license = source["license"];
+	        this.installerType = source["installerType"];
+	        this.architecture = source["architecture"];
+	        this.officialSite = source["officialSite"];
+	        this.silentArgs = source["silentArgs"];
 	    }
 	}
 

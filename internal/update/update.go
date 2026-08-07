@@ -23,7 +23,7 @@ const (
 
 	// CurrentVersion is the app version baked into the binary at build time.
 	CurrentVersion = "236.12"
-	CurrentBuild   = 9
+	CurrentBuild   = 10
 )
 
 // Info is the update manifest parsed from the GitHub Gist.

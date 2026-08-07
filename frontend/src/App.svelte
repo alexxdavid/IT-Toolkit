@@ -9,9 +9,11 @@
   import logo from './lib/assets/logo.png'
 
   let scanErr = $state<string | null>(null)
+  let version = $state('')
 
   onMount(() => {
     refresh()
+    api.getCurrentVersion().then(v => version = v).catch(() => {})
   })
 
   async function refresh() {
@@ -26,22 +28,24 @@
 </script>
 
 <div class="flex h-screen flex-col bg-[#0b1120]">
-  <!-- Logo top-right -->
-  <div class="pointer-events-none absolute top-2 right-3 z-40">
-    <img src={logo} alt="Solutions IT" class="h-10 w-auto object-contain" />
-  </div>
+  <!-- Top bar: app name left, logo right -->
+  <header class="flex h-12 shrink-0 items-center justify-between border-b border-slate-800 bg-slate-900/60 px-4">
+    <div class="flex items-center gap-2">
+      <span class="text-sm font-semibold text-slate-200">Solutions IT Toolkit</span>
+      <span class="rounded bg-slate-800 px-1.5 py-0.5 text-[10px] text-slate-400">v{version}</span>
+    </div>
+    <img src={logo} alt="Solutions IT" class="h-9 w-auto object-contain" />
+  </header>
 
-  {#if ui.settingsOpen}
-    <div class="flex min-h-0 flex-1 overflow-hidden">
+  <div class="flex min-h-0 flex-1 overflow-hidden">
+    {#if ui.settingsOpen}
       <Sidebar />
       <Settings />
-    </div>
-  {:else}
-    <div class="flex min-h-0 flex-1 overflow-hidden">
+    {:else}
       <Sidebar />
       <GithubLibrary />
-    </div>
-  {/if}
+    {/if}
+  </div>
 
   {#if scanErr}
     <div class="fixed bottom-4 right-4 z-50 flex max-w-md items-start gap-3 rounded-lg border border-rose-500/40 bg-rose-950/90 px-4 py-3 text-sm text-rose-200 shadow-xl">

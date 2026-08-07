@@ -1,7 +1,7 @@
 <script lang="ts">
   import { api } from '../lib/api'
   import { categoryColor } from '../lib/categories'
-  import { Download, FolderOpen, Search, X, ArrowUpCircle, Star } from 'lucide-svelte'
+  import { Download, FolderOpen, Search, X, ArrowUpCircle, Star, Info } from 'lucide-svelte'
   import { onMount } from 'svelte'
 
   let software = $state<any[]>([])
@@ -14,6 +14,7 @@
   let pollTimer: ReturnType<typeof setInterval> | null = null
   let selectedCategory = $state('all')
   let swFavorites = $state<Record<string, boolean>>({})
+  let expandedItem = $state<string | null>(null)
 
   let filtered = $derived.by(() => {
     const q = searchQuery.trim().toLowerCase()
@@ -41,6 +42,10 @@
   async function toggleFavorite(name: string) {
     const result = await api.toggleFavorite('software', name)
     swFavorites[name] = result
+  }
+
+  function toggleDetails(name: string) {
+    expandedItem = expandedItem === name ? null : name
   }
 
   async function downloadItem(item: any) {
@@ -109,40 +114,50 @@
     <div class="space-y-1">
       {#each filtered as item (item.name)}
         {@const sv = versions[item.name]}
-        <div class="flex items-center gap-3 rounded-xl border border-white/5 bg-slate-800/50 px-4 py-3 transition hover:border-white/10">
-          <div class="min-w-0 flex-1">
-            <div class="flex flex-wrap items-center gap-2">
-              <span class="text-sm font-bold text-white">{item.name}</span>
-              <span class="shrink-0 rounded-lg border border-white/10 bg-slate-950/60 px-2 py-0.5 text-xs font-medium {categoryColor(item.category)}">{item.category}</span>
-              {#if sv?.installedVersion}
-                <span class="shrink-0 rounded bg-slate-700/50 px-2 py-0.5 text-xs font-mono text-slate-300">v{sv.installedVersion}</span>
+        <div class="rounded-xl border border-white/5 bg-slate-800/50 overflow-hidden transition hover:border-white/10">
+          <div class="flex items-center gap-3 px-4 py-3">
+            <div class="min-w-0 flex-1">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="text-sm font-bold text-white">{item.name}</span>
+                <span class="shrink-0 rounded-lg border border-white/10 bg-slate-950/60 px-2 py-0.5 text-xs font-medium {categoryColor(item.category)}">{item.category}</span>
+                {#if sv?.installedVersion}
+                  <span class="shrink-0 rounded bg-slate-700/50 px-2 py-0.5 text-xs font-mono text-slate-300">v{sv.installedVersion}</span>
+                {/if}
+                {#if sv?.latestVersion && sv.latestVersion !== sv.installedVersion}
+                  <span class="shrink-0 rounded border border-sky-500/30 px-2 py-0.5 text-xs font-mono text-sky-300">Latest: v{sv.latestVersion}</span>
+                {/if}
+                {#if sv?.updateAvailable}
+                  <span class="shrink-0 rounded bg-amber-500/15 px-2 py-0.5 text-xs font-bold text-amber-300">Update available</span>
+                {:else if sv?.installedVersion}
+                  <span class="shrink-0 rounded bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-400">Up to date</span>
+                {/if}
+                {#if completed[item.name] && !completed[item.name].startsWith('error')}
+                  <span class="shrink-0 rounded bg-emerald-500/15 px-2 py-0.5 text-xs font-semibold text-emerald-300">Downloaded</span>
+                {:else if sv?.hasDownload}
+                  <span class="shrink-0 rounded bg-emerald-500/10 px-2 py-0.5 text-xs text-emerald-400">On disk</span>
+                {/if}
+              </div>
+              {#if item.manufacturer || item.description}
+                <div class="mt-1 text-sm text-slate-400">
+                  {#if item.manufacturer}<span class="font-medium text-slate-300">{item.manufacturer}</span>{/if}
+                  {#if item.description}<span> — {item.description}</span>{/if}
+                </div>
+              {:else if item.notes}
+                <div class="mt-1 text-sm text-slate-500">{item.notes}</div>
               {/if}
-              {#if sv?.latestVersion && sv.latestVersion !== sv.installedVersion}
-                <span class="shrink-0 rounded border border-sky-500/30 px-2 py-0.5 text-xs font-mono text-sky-300">Latest: v{sv.latestVersion}</span>
-              {/if}
-              {#if sv?.updateAvailable}
-                <span class="shrink-0 rounded bg-amber-500/15 px-2 py-0.5 text-xs font-bold text-amber-300">Update available</span>
-              {:else if sv?.installedVersion}
-                <span class="shrink-0 rounded bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-400">Up to date</span>
-              {/if}
-              {#if completed[item.name] && !completed[item.name].startsWith('error')}
-                <span class="shrink-0 rounded bg-emerald-500/15 px-2 py-0.5 text-xs font-semibold text-emerald-300">Downloaded</span>
-              {:else if sv?.hasDownload}
-                <span class="shrink-0 rounded bg-emerald-500/10 px-2 py-0.5 text-xs text-emerald-400">On disk</span>
+              {#if completed[item.name] && completed[item.name].startsWith('error')}
+                <div class="mt-1 text-sm text-rose-400">{completed[item.name]}</div>
               {/if}
             </div>
-            {#if item.notes}
-              <div class="mt-1 text-sm text-slate-500">{item.notes}</div>
-            {/if}
-            {#if completed[item.name] && completed[item.name].startsWith('error')}
-              <div class="mt-1 text-sm text-rose-400">{completed[item.name]}</div>
-            {/if}
-          </div>
-          <button class="shrink-0 rounded p-1.5 transition {swFavorites[item.name] ? 'text-amber-400' : 'text-slate-500 hover:text-amber-400'}"
-            title={swFavorites[item.name] ? 'Remove from favorites' : 'Add to favorites'}
-            onclick={() => toggleFavorite(item.name)}>
-            <Star size="16" class={swFavorites[item.name] ? 'fill-current' : ''} />
-          </button>
+            <button class="shrink-0 rounded p-1.5 transition {expandedItem === item.name ? 'text-sky-400' : 'text-slate-500 hover:text-sky-400'}"
+              title="Details" onclick={() => toggleDetails(item.name)}>
+              <Info size="16" />
+            </button>
+            <button class="shrink-0 rounded p-1.5 transition {swFavorites[item.name] ? 'text-amber-400' : 'text-slate-500 hover:text-amber-400'}"
+              title={swFavorites[item.name] ? 'Remove from favorites' : 'Add to favorites'}
+              onclick={() => toggleFavorite(item.name)}>
+              <Star size="16" class={swFavorites[item.name] ? 'fill-current' : ''} />
+            </button>
           {#if downloading === item.name}
             <div class="flex items-center gap-2 shrink-0">
               <div class="h-2 w-24 overflow-hidden rounded bg-slate-800">
@@ -160,6 +175,34 @@
               onclick={() => downloadItem(item)} disabled={downloading !== null}>
               <Download size="14" /> {sv?.updateAvailable ? 'Update' : 'Download'}
             </button>
+          {/if}
+          </div>
+          {#if expandedItem === item.name}
+            <div class="border-t border-white/5 bg-slate-950/40 px-4 py-3">
+              <div class="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                {#if item.manufacturer}
+                  <div class="flex gap-2"><span class="w-24 shrink-0 text-slate-500">Manufacturer</span><span class="text-slate-200">{item.manufacturer}</span></div>
+                {/if}
+                {#if item.license}
+                  <div class="flex gap-2"><span class="w-24 shrink-0 text-slate-500">License</span><span class="text-slate-200">{item.license}</span></div>
+                {/if}
+                {#if item.installerType}
+                  <div class="flex gap-2"><span class="w-24 shrink-0 text-slate-500">Installer</span><span class="text-slate-200">{item.installerType}</span></div>
+                {/if}
+                {#if item.architecture}
+                  <div class="flex gap-2"><span class="w-24 shrink-0 text-slate-500">Arch</span><span class="text-slate-200">{item.architecture}</span></div>
+                {/if}
+                {#if item.silentArgs}
+                  <div class="flex gap-2 col-span-2"><span class="w-24 shrink-0 text-slate-500">Silent</span><code class="font-mono text-xs text-emerald-300">{item.silentArgs}</code></div>
+                {/if}
+                {#if item.officialSite}
+                  <div class="flex gap-2 col-span-2"><span class="w-24 shrink-0 text-slate-500">Site</span><a href={item.officialSite} target="_blank" rel="noreferrer" class="text-sky-400 hover:underline">{item.officialSite}</a></div>
+                {/if}
+                {#if item.wingetId}
+                  <div class="flex gap-2 col-span-2"><span class="w-24 shrink-0 text-slate-500">Winget</span><code class="font-mono text-xs text-slate-300">winget install {item.wingetId}</code></div>
+                {/if}
+              </div>
+            </div>
           {/if}
         </div>
       {/each}

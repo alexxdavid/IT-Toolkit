@@ -16,12 +16,19 @@ import (
 
 // SoftwareItem is a downloadable IT tool (not a GitHub repo).
 type SoftwareItem struct {
-	Name     string `json:"name"`
-	Version  string `json:"version"`
-	Category string `json:"category"`
-	Download string `json:"download"`
-	Notes    string `json:"notes"`
-	WingetID string `json:"wingetId"`
+	Name         string `json:"name"`
+	Version      string `json:"version"`
+	Category     string `json:"category"`
+	Download     string `json:"download"`
+	Notes        string `json:"notes"`
+	WingetID     string `json:"wingetId"`
+	Manufacturer string `json:"manufacturer"`
+	Description  string `json:"description"`
+	License      string `json:"license"`
+	InstallerType string `json:"installerType"`
+	Architecture string `json:"architecture"`
+	OfficialSite string `json:"officialSite"`
+	SilentArgs   string `json:"silentArgs"`
 }
 
 var (
@@ -130,7 +137,91 @@ var SoftwareCatalog = []*SoftwareItem{
 
 // GetSoftwareCatalog returns the curated software list.
 func GetSoftwareCatalog() []*SoftwareItem {
-	return SoftwareCatalog
+	out := make([]*SoftwareItem, len(SoftwareCatalog))
+	for i, item := range SoftwareCatalog {
+		cp := *item
+		if m, ok := softwareMeta[item.Name]; ok {
+			cp.Manufacturer = m.Manufacturer
+			cp.Description = m.Description
+			cp.License = m.License
+			cp.InstallerType = m.InstallerType
+			cp.Architecture = m.Architecture
+			cp.OfficialSite = m.OfficialSite
+			cp.SilentArgs = m.SilentArgs
+		}
+		out[i] = &cp
+	}
+	return out
+}
+
+// softwareMeta holds rich metadata per software name, applied on top of the
+// base catalog so entries stay readable.
+var softwareMeta = map[string]struct {
+	Manufacturer  string
+	Description   string
+	License       string
+	InstallerType string
+	Architecture  string
+	OfficialSite  string
+	SilentArgs    string
+}{
+	"Google Chrome":    {"Google", "Fast, secure web browser", "Proprietary/Free", "MSI", "x64", "https://www.google.com/chrome", "msiexec /i chrome.msi /quiet"},
+	"Mozilla Firefox":  {"Mozilla", "Open-source web browser", "Open Source (MPL)", "EXE", "x64", "https://www.mozilla.org/firefox", "-ms"},
+	"Microsoft Edge":   {"Microsoft", "Chromium-based web browser", "Proprietary/Free", "EXE", "x64", "https://www.microsoft.com/edge", "--silent-install"},
+	"Brave Browser":    {"Brave", "Privacy-focused web browser", "Open Source (MPL-2.0)", "EXE", "x64", "https://brave.com", "--silent"},
+	"Microsoft Teams":  {"Microsoft", "Team collaboration and meetings", "Proprietary/Free", "EXE", "x64", "https://www.microsoft.com/microsoft-teams", "--silent"},
+	"Zoom":             {"Zoom Video", "Video conferencing and meetings", "Proprietary/Free", "EXE", "x64", "https://zoom.us", "/silent /norestart"},
+	"Slack":            {"Slack", "Team messaging and collaboration", "Proprietary/Free", "EXE", "x64", "https://slack.com", "--silent"},
+	"Notepad++":        {"Notepad++", "Advanced text and code editor", "Open Source (GPL-3.0)", "EXE", "x64", "https://notepad-plus-plus.org", "/S"},
+	"LibreOffice":      {"The Document Foundation", "Open-source office suite", "Open Source (MPL-2.0)", "MSI", "x64", "https://www.libreoffice.org", "msiexec /i LibreOffice.msi /qn"},
+	"VLC":              {"VideoLAN", "Open-source media player", "Open Source (GPL-2.0)", "EXE", "x64", "https://www.videolan.org/vlc", "/L=1033 /S"},
+	"Adobe Acrobat Reader": {"Adobe", "PDF viewer and editor", "Proprietary/Free", "EXE", "x64", "https://get.adobe.com/reader", "/sPB"},
+	"Visual Studio Code": {"Microsoft", "Cross-platform code editor", "Open Source (MIT)", "EXE", "x64", "https://code.visualstudio.com", "/VERYSILENT /NORESTART"},
+	"Git for Windows":  {"The Git Project", "Distributed version control", "Open Source (GPL-2.0)", "EXE", "x64", "https://git-scm.com", "/VERYSILENT /NORESTART"},
+	"PowerShell 7":     {"Microsoft", "Cross-platform task automation shell", "Open Source (MIT)", "MSI", "x64", "https://github.com/PowerShell/PowerShell", "msiexec /i PowerShell.msi /qn ADD_EXPLORER_CONTEXT_MENU_OPENPOWERSHELL=1"},
+	"Windows Terminal": {"Microsoft", "Modern terminal for command-line tools", "Open Source (MIT)", "MSIX", "x64", "https://github.com/microsoft/terminal", "Add-AppxPackage"},
+	"Python 3":         {"Python Software Foundation", "High-level programming language", "Open Source (PSF)", "EXE", "x64", "https://www.python.org", "/quiet InstallAllUsers=1 PrependPath=1"},
+	"VeraCrypt":        {"IDRIX", "Free disk encryption software", "Open Source (Apache-2.0)", "EXE", "x64", "https://www.veracrypt.fr", "/S"},
+	"KeePass":          {"KeePass", "Open-source password manager", "Open Source (GPL-2.0)", "EXE", "x64", "https://keepass.info", "/SILENT"},
+	"Bitwarden":        {"Bitwarden", "Open-source password manager", "Open Source (GPL-3.0)", "EXE", "x64", "https://bitwarden.com", "--silent"},
+	"1Password":        {"1Password", "Password manager for teams", "Proprietary", "MSI", "x64", "https://1password.com", "msiexec /i 1Password.msi /qn"},
+	"OpenVPN":          {"OpenVPN", "Open-source VPN client", "Open Source (GPL-2.0)", "MSI", "x64", "https://openvpn.net", "msiexec /i OpenVPN.msi /qn"},
+	"7-Zip":            {"Igor Pavlov", "Open-source file archiver", "Open Source (LGPL)", "EXE", "x64", "https://www.7-zip.org", "/S"},
+	"PuTTY":            {"Simon Tatham", "SSH and telnet client", "Open Source (MIT)", "EXE", "x64", "https://www.putty.org", "/VERYSILENT"},
+	"WinSCP":           {"WinSCP", "SFTP, SCP and FTP client", "Open Source (GPL-3.0)", "EXE", "x64", "https://winscp.net", "/VERYSILENT"},
+	"Everything":       {"voidtools", "Instant file search utility", "Freeware", "EXE", "x64", "https://www.voidtools.com", "/S"},
+	"RustDesk":         {"RustDesk", "Open-source remote desktop", "Open Source (AGPL-3.0)", "EXE", "x64", "https://rustdesk.com", "--silent-install"},
+	"AnyDesk":          {"AnyDesk", "Remote desktop software", "Proprietary/Free", "EXE", "x64", "https://anydesk.com", "--silent"},
+	"TeamViewer":       {"TeamViewer", "Remote access and support", "Proprietary/Free", "EXE", "x64", "https://teamviewer.com", "/S"},
+	"Tailscale":        {"Tailscale", "Zero-config VPN based on WireGuard", "Proprietary/Free", "EXE", "x64", "https://tailscale.com", "/quiet"},
+	"Wireshark":        {"Wireshark", "Network protocol analyzer", "Open Source (GPL-2.0)", "EXE", "x64", "https://www.wireshark.org", "/S"},
+	"Advanced IP Scanner": {"Famatech", "Fast LAN network scanner", "Freeware", "EXE", "x64", "https://www.advanced-ip-scanner.com", "/VERYSILENT"},
+	"Nmap":             {"Nmap", "Network discovery and security scanner", "Open Source (NPSL)", "EXE", "x64", "https://nmap.org", "/S"},
+	"Veeam Agent":      {"Veeam", "Free backup agent for Windows", "Proprietary/Free", "EXE", "x64", "https://www.veeam.com", "/S"},
+	"Google Drive":     {"Google", "Cloud file sync and storage", "Proprietary/Free", "EXE", "x64", "https://www.google.com/drive", "--silent"},
+	"SumatraPDF":       {"SumatraPDF", "Lightweight PDF viewer", "Open Source (GPL-3.0)", "EXE", "x64", "https://www.sumatrapdfreader.org", "-s"},
+	"Paint.NET":        {"dotPDN LLC", "Free image and photo editor", "Proprietary/Free", "ZIP", "x64", "https://www.getpaint.net", "n/a (portable ZIP)"},
+	"IrfanView":        {"Irfan Skiljan", "Fast image viewer and converter", "Proprietary/Free", "EXE", "x64", "https://www.irfanview.com", "/silent"},
+	"Node.js LTS":      {"OpenJS Foundation", "JavaScript runtime built on Chrome's V8", "Open Source (MIT)", "MSI", "x64", "https://nodejs.org", "msiexec /i node.msi /qn"},
+	"Docker Desktop":   {"Docker", "Containerized app development", "Proprietary/Free", "EXE", "x64", "https://www.docker.com", "install --accept-license"},
+	"GitHub Desktop":   {"GitHub", "Visual Git client", "Open Source (MIT)", "EXE", "x64", "https://desktop.github.com", "/VERYSILENT"},
+	"Postman":          {"Postman", "API development and testing platform", "Proprietary/Free", "EXE", "x64", "https://www.postman.com", "/S"},
+	"WinMerge":         {"WinMerge", "File and folder comparison tool", "Open Source (GPL-2.0)", "EXE", "x64", "https://winmerge.org", "/VERYSILENT"},
+	"DBeaver":          {"DBeaver", "Universal database client", "Open Source (Apache-2.0)", "ZIP", "x64", "https://dbeaver.io", "n/a (portable ZIP)"},
+	"FileZilla":        {"FileZilla Project", "Free FTP/SFTP client", "Open Source (GPL-2.0)", "EXE", "x64", "https://filezilla-project.org", "/S"},
+	"Sysinternals Suite": {"Microsoft", "Advanced system utilities and troubleshooting", "Freeware", "ZIP", "x64", "https://learn.microsoft.com/sysinternals", "n/a (portable ZIP)"},
+	"WizTree":          {"Antibody Software", "Fast disk space analyzer", "Freeware", "EXE", "x64", "https://wiztreefree.com", "/VERYSILENT"},
+	"CrystalDiskInfo":  {"Crystal Dew World", "HDD/SSD health monitor", "Open Source (MIT)", "ZIP", "x64", "https://crystalmark.info", "n/a (portable ZIP)"},
+	"Discord":          {"Discord", "Voice, video and text chat", "Proprietary/Free", "EXE", "x64", "https://discord.com", "/s"},
+	"Telegram":         {"Telegram", "Cloud-based messaging", "Open Source (GPL-3.0)", "EXE", "x64", "https://telegram.org", "/VERYSILENT"},
+	"Steam":            {"Valve", "Digital game distribution platform", "Proprietary/Free", "EXE", "x64", "https://store.steampowered.com", "/S"},
+	"OBS Studio":       {"OBS Project", "Open-source screen recording and streaming", "Open Source (GPL-2.0)", "EXE", "x64", "https://obsproject.com", "/S"},
+	"AutoHotkey":       {"AutoHotkey", "Windows automation scripting", "Open Source (GPL-2.0)", "EXE", "x64", "https://www.autohotkey.com", "/S"},
+	"PowerToys":        {"Microsoft", "Windows power user utilities", "Open Source (MIT)", "EXE", "x64", "https://github.com/microsoft/PowerToys", "--silent"},
+	"O&O ShutUp10":     {"O&O Software", "Windows 10/11 privacy and telemetry tool", "Freeware", "EXE", "x64", "https://www.oo-software.com", "/S"},
+	"Revo Uninstaller": {"VS Revo Group", "Advanced uninstaller", "Proprietary/Free", "EXE", "x64", "https://www.revouninstaller.com", "/S"},
+	"Macrium Reflect Free": {"Paramount Software", "Disk imaging and cloning", "Proprietary/Free", "EXE", "x64", "https://www.macrium.com", "/S"},
+	"Duplicati":        {"Duplicati", "Open-source backup with cloud support", "Open Source (LGPL-2.1)", "MSI", "x64", "https://duplicati.com", "msiexec /i duplicati.msi /qn"},
 }
 
 // SoftwareVersion holds the latest + installed version for a software item.
