@@ -126,7 +126,7 @@ def run_build(version):
 
 
 def find_installer(version):
-    for name in [f"ITToolkit-Setup-{version}.exe", "ITToolkit-Setup-1.0.0.exe"]:
+    for name in [f"SITTOOLKIT-Setup-{version}.exe", "SITTOOLKIT-Setup-1.0.0.exe"]:
         p = os.path.join(BASE_DIR, "build", name)
         if os.path.exists(p):
             return p
@@ -156,7 +156,7 @@ def create_release(version, build, notes, installer_path, token):
                              {"tag_name": tag, "name": f"Solutions IT Toolkit v{version}", "body": notes or f"Release v{version}", "draft": False, "prerelease": False})
 
     upload_url = release["upload_url"].split("{")[0]
-    asset_name = f"ITToolkit-Setup-{version}.b{build}.exe"
+    asset_name = f"SITTOOLKIT-Setup-{version}.b{build}.exe"
     print(f"  Uploading {asset_name}...")
     github_upload(f"{upload_url}?name={urllib.parse.quote(asset_name)}", token, installer_path)
 
@@ -213,7 +213,7 @@ def main():
     release = create_release(version, build, notes, installer, token)
     current_asset = None
     for a in release.get("assets", []):
-        if a.get("name", "").startswith(f"ITToolkit-Setup-{version}"):
+        if a.get("name", "").startswith(f"SITTOOLKIT-Setup-{version}"):
             current_asset = a; break
     # Use browser_download_url so the app can download the binary directly
     # (API asset URLs need an Accept header the update client may not send).

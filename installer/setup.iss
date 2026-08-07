@@ -1,4 +1,4 @@
-; Solutions IT Toolkit — portable extract-only installer
+; Solutions IT Toolkit — installer with Start Menu shortcut and uninstaller
 ; Compiled with Inno Setup 7 (ISCC)
 
 #ifndef MyAppVersion
@@ -27,11 +27,13 @@ SetupIconFile={#MyAppIcon}
 Compression=lzma2/ultra
 SolidCompression=yes
 WizardStyle=modern
-Uninstallable=no
-CreateUninstallRegKey=no
+Uninstallable=yes
+CreateUninstallRegKey=yes
+UninstallDisplayName={#MyAppName}
+UninstallDisplayIcon={app}\{#MyAppExeName}
 CreateAppDir=yes
 OutputDir=..\build
-OutputBaseFilename=ITToolkit-Setup-{#MyAppVersion}
+OutputBaseFilename=SITTOOLKIT-Setup-{#MyAppVersion}
 
 [Dirs]
 Name: "{app}\Repo"
@@ -46,5 +48,31 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Source: "..\build\bin\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\build\scripts_seed.json"; DestDir: "{app}"; Flags: ignoreversion
 
-[Run]
-; Nothing to launch after install by design — pure extraction.
+[Icons]
+Name: "{userprograms}\{#MyAppName}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"
+Name: "{userprograms}\{#MyAppName}\Uninstall {#MyAppName}"; Filename: "{uninstallexe}"; IconFilename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"
+
+[Code]
+var
+  RemoveSettings: Boolean;
+
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+begin
+  if CurUninstallStep = usPostUninstall then
+  begin
+    if RemoveSettings then
+    begin
+      if DelTree(ExpandConstant('{localappdata}\ITToolkit'), True, True, True) then
+        Log('Removed ITToolkit app data');
+    end;
+  end;
+end;
+
+function InitializeUninstall(): Boolean;
+begin
+  RemoveSettings := MsgBox('Remove all files and settings too?'#13#13
+    'This deletes your catalog, script library, favorites and settings ' +
+    '(in %LOCALAPPDATA%\ITToolkit).'#13#13 +
+    'Choose No to keep them.', mbConfirmation, MB_YESNO) = IDYES;
+  Result := True;
+end;
